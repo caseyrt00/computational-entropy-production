@@ -1,0 +1,4 @@
+# build artifacts (the tectonic log carries local paths; regenerate with --keep-logs)
+paper/ENTROPY_PRODUCTION.log
+__pycache__/
+.DS_Store

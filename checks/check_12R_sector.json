@@ -1,0 +1,50 @@
+[
+ {
+  "N": 8,
+  "states": 65536,
+  "longest": 2187,
+  "three_pow_Nm1": 2187,
+  "longest_is_3powNm1": true,
+  "zero_sites_on_longest": [
+   7
+  ],
+  "median_over_states": 81,
+  "seconds": 0.0
+ },
+ {
+  "N": 9,
+  "states": 262144,
+  "longest": 6561,
+  "three_pow_Nm1": 6561,
+  "longest_is_3powNm1": true,
+  "zero_sites_on_longest": [
+   8
+  ],
+  "median_over_states": 243,
+  "seconds": 0.1
+ },
+ {
+  "N": 10,
+  "states": 1048576,
+  "longest": 19683,
+  "three_pow_Nm1": 19683,
+  "longest_is_3powNm1": true,
+  "zero_sites_on_longest": [
+   9
+  ],
+  "median_over_states": 243,
+  "seconds": 0.3
+ },
+ {
+  "N": 11,
+  "states": 4194304,
+  "longest": 59049,
+  "three_pow_Nm1": 59049,
+  "longest_is_3powNm1": true,
+  "zero_sites_on_longest": [
+   10
+  ],
+  "median_over_states": 243,
+  "seconds": 1.4
+ }
+]

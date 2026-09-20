@@ -1,0 +1,400 @@
+{
+ "A_lemma415": {
+  "E1_E2_E3": true,
+  "det_decodes": true,
+  "unique_randomness": true,
+  "perfect_privacy": true,
+  "balanced_tiling": true
+ },
+ "B_pipeline": {
+  "n_in": 20,
+  "n_out": 20,
+  "locality": 3,
+  "is_permutation": true,
+  "decoder_ok": true,
+  "r1_eq_M11_xor_x1": true,
+  "r2_eq_M22_xor_x3": true,
+  "s_predictors": {
+   "s[poly0,mono(0,)]": {
+    "deg": 1,
+    "predictor_success": 0.5,
+    "predicted": 0.5
+   },
+   "s[poly1,mono(0,)]": {
+    "deg": 1,
+    "predictor_success": 0.5,
+    "predicted": 0.5
+   },
+   "s[poly1,mono(3,)]": {
+    "deg": 1,
+    "predictor_success": 0.5,
+    "predicted": 0.5
+   },
+   "s[poly2,mono(1,)]": {
+    "deg": 1,
+    "predictor_success": 0.5,
+    "predicted": 0.5
+   },
+   "s[poly2,mono(3, 2)]": {
+    "deg": 2,
+    "predictor_success": 0.75,
+    "predicted": 0.75
+   },
+   "s[poly2,mono(0, 4)]": {
+    "deg": 2,
+    "predictor_success": 0.75,
+    "predicted": 0.75
+   },
+   "s[poly2,mono(3, 4)]": {
+    "deg": 2,
+    "predictor_success": 0.75,
+    "predicted": 0.75
+   },
+   "s[poly3,mono(2,)]": {
+    "deg": 1,
+    "predictor_success": 0.5,
+    "predicted": 0.5
+   },
+   "s[poly3,mono(4,)]": {
+    "deg": 1,
+    "predictor_success": 0.5,
+    "predicted": 0.5
+   },
+   "s[poly4,mono(2,)]": {
+    "deg": 1,
+    "predictor_success": 0.5,
+    "predicted": 0.5
+   }
+  },
+  "random_guess_baseline": 0.500004768371582
+ },
+ "C_mu": {
+  "10": {
+   "num_primes": 75,
+   "mean_mu": 0.2504427083333333,
+   "mean_mu_sq": 0.08336613972981771,
+   "baseline_uniform_integers": 0.2509765625
+  },
+  "11": {
+   "num_primes": 137,
+   "mean_mu": 0.25563840100364965,
+   "mean_mu_sq": 0.08614752414452768,
+   "baseline_uniform_integers": 0.25048828125
+  },
+  "12": {
+   "num_primes": 255,
+   "mean_mu": 0.2525850183823529,
+   "mean_mu_sq": 0.08491440941305721,
+   "baseline_uniform_integers": 0.250244140625
+  },
+  "13": {
+   "num_primes": 464,
+   "mean_mu": 0.2533490411166487,
+   "mean_mu_sq": 0.08480342079339356,
+   "baseline_uniform_integers": 0.2501220703125
+  },
+  "14": {
+   "num_primes": 872,
+   "mean_mu": 0.25280033776519495,
+   "mean_mu_sq": 0.08491222888504693,
+   "baseline_uniform_integers": 0.25006103515625
+  },
+  "15": {
+   "num_primes": 1612,
+   "mean_mu": 0.2527640368743215,
+   "mean_mu_sq": 0.08466840515759018,
+   "baseline_uniform_integers": 0.250030517578125
+  },
+  "16": {
+   "num_primes": 3030,
+   "mean_mu": 0.25353654414513715,
+   "mean_mu_sq": 0.0850786865233957,
+   "baseline_uniform_integers": 0.2500152587890625
+  },
+  "17": {
+   "num_primes": 5709,
+   "mean_mu": 0.2525626961164663,
+   "mean_mu_sq": 0.08470519740062046,
+   "baseline_uniform_integers": 0.25000762939453125
+  },
+  "18": {
+   "num_primes": 10749,
+   "mean_mu": 0.2525295712180621,
+   "mean_mu_sq": 0.08458813186957478,
+   "baseline_uniform_integers": 0.2500038146972656
+  },
+  "19": {
+   "num_primes": 20390,
+   "mean_mu": 0.25211657589121506,
+   "mean_mu_sq": 0.08447008052627696,
+   "baseline_uniform_integers": 0.2500019073486328
+  },
+  "20": {
+   "num_primes": 38635,
+   "mean_mu": 0.25208499627541,
+   "mean_mu_sq": 0.08437673880224408,
+   "baseline_uniform_integers": 0.2500009536743164
+  }
+ },
+ "C_leaks": [
+  {
+   "p": 2053,
+   "nu2": 2,
+   "euler_lsb_ok": true,
+   "pohlig_hellman_lowbits_ok": true
+  },
+  {
+   "p": 2063,
+   "nu2": 1,
+   "euler_lsb_ok": true,
+   "pohlig_hellman_lowbits_ok": true
+  },
+  {
+   "p": 2069,
+   "nu2": 2,
+   "euler_lsb_ok": true,
+   "pohlig_hellman_lowbits_ok": true
+  },
+  {
+   "p": 2081,
+   "nu2": 5,
+   "euler_lsb_ok": true,
+   "pohlig_hellman_lowbits_ok": true
+  },
+  {
+   "p": 2083,
+   "nu2": 1,
+   "euler_lsb_ok": true,
+   "pohlig_hellman_lowbits_ok": true
+  },
+  {
+   "p": 2087,
+   "nu2": 1,
+   "euler_lsb_ok": true,
+   "pohlig_hellman_lowbits_ok": true
+  },
+  {
+   "p": 2089,
+   "nu2": 3,
+   "euler_lsb_ok": true,
+   "pohlig_hellman_lowbits_ok": true
+  },
+  {
+   "p": 2099,
+   "nu2": 1,
+   "euler_lsb_ok": true,
+   "pohlig_hellman_lowbits_ok": true
+  },
+  {
+   "p": 2111,
+   "nu2": 1,
+   "euler_lsb_ok": true,
+   "pohlig_hellman_lowbits_ok": true
+  },
+  {
+   "p": 2113,
+   "nu2": 6,
+   "euler_lsb_ok": true,
+   "pohlig_hellman_lowbits_ok": true
+  },
+  {
+   "p": 2129,
+   "nu2": 4,
+   "euler_lsb_ok": true,
+   "pohlig_hellman_lowbits_ok": true
+  },
+  {
+   "p": 2131,
+   "nu2": 1,
+   "euler_lsb_ok": true,
+   "pohlig_hellman_lowbits_ok": true
+  },
+  {
+   "p": 2137,
+   "nu2": 3,
+   "euler_lsb_ok": true,
+   "pohlig_hellman_lowbits_ok": true
+  },
+  {
+   "p": 2141,
+   "nu2": 2,
+   "euler_lsb_ok": true,
+   "pohlig_hellman_lowbits_ok": true
+  },
+  {
+   "p": 2143,
+   "nu2": 1,
+   "euler_lsb_ok": true,
+   "pohlig_hellman_lowbits_ok": true
+  },
+  {
+   "p": 2153,
+   "nu2": 3,
+   "euler_lsb_ok": true,
+   "pohlig_hellman_lowbits_ok": true
+  },
+  {
+   "p": 2161,
+   "nu2": 4,
+   "euler_lsb_ok": true,
+   "pohlig_hellman_lowbits_ok": true
+  },
+  {
+   "p": 2179,
+   "nu2": 1,
+   "euler_lsb_ok": true,
+   "pohlig_hellman_lowbits_ok": true
+  },
+  {
+   "p": 2203,
+   "nu2": 1,
+   "euler_lsb_ok": true,
+   "pohlig_hellman_lowbits_ok": true
+  },
+  {
+   "p": 2207,
+   "nu2": 1,
+   "euler_lsb_ok": true,
+   "pohlig_hellman_lowbits_ok": true
+  },
+  {
+   "p": 2213,
+   "nu2": 2,
+   "euler_lsb_ok": true,
+   "pohlig_hellman_lowbits_ok": true
+  },
+  {
+   "p": 2221,
+   "nu2": 2,
+   "euler_lsb_ok": true,
+   "pohlig_hellman_lowbits_ok": true
+  },
+  {
+   "p": 2237,
+   "nu2": 2,
+   "euler_lsb_ok": true,
+   "pohlig_hellman_lowbits_ok": true
+  },
+  {
+   "p": 2239,
+   "nu2": 1,
+   "euler_lsb_ok": true,
+   "pohlig_hellman_lowbits_ok": true
+  },
+  {
+   "p": 2243,
+   "nu2": 1,
+   "euler_lsb_ok": true,
+   "pohlig_hellman_lowbits_ok": true
+  },
+  {
+   "p": 2251,
+   "nu2": 1,
+   "euler_lsb_ok": true,
+   "pohlig_hellman_lowbits_ok": true
+  },
+  {
+   "p": 2267,
+   "nu2": 1,
+   "euler_lsb_ok": true,
+   "pohlig_hellman_lowbits_ok": true
+  },
+  {
+   "p": 2269,
+   "nu2": 2,
+   "euler_lsb_ok": true,
+   "pohlig_hellman_lowbits_ok": true
+  },
+  {
+   "p": 2273,
+   "nu2": 5,
+   "euler_lsb_ok": true,
+   "pohlig_hellman_lowbits_ok": true
+  },
+  {
+   "p": 2281,
+   "nu2": 3,
+   "euler_lsb_ok": true,
+   "pohlig_hellman_lowbits_ok": true
+  },
+  {
+   "p": 2287,
+   "nu2": 1,
+   "euler_lsb_ok": true,
+   "pohlig_hellman_lowbits_ok": true
+  },
+  {
+   "p": 2293,
+   "nu2": 2,
+   "euler_lsb_ok": true,
+   "pohlig_hellman_lowbits_ok": true
+  },
+  {
+   "p": 2297,
+   "nu2": 3,
+   "euler_lsb_ok": true,
+   "pohlig_hellman_lowbits_ok": true
+  },
+  {
+   "p": 2309,
+   "nu2": 2,
+   "euler_lsb_ok": true,
+   "pohlig_hellman_lowbits_ok": true
+  },
+  {
+   "p": 2311,
+   "nu2": 1,
+   "euler_lsb_ok": true,
+   "pohlig_hellman_lowbits_ok": true
+  },
+  {
+   "p": 2333,
+   "nu2": 2,
+   "euler_lsb_ok": true,
+   "pohlig_hellman_lowbits_ok": true
+  },
+  {
+   "p": 2339,
+   "nu2": 1,
+   "euler_lsb_ok": true,
+   "pohlig_hellman_lowbits_ok": true
+  },
+  {
+   "p": 2341,
+   "nu2": 2,
+   "euler_lsb_ok": true,
+   "pohlig_hellman_lowbits_ok": true
+  },
+  {
+   "p": 2347,
+   "nu2": 1,
+   "euler_lsb_ok": true,
+   "pohlig_hellman_lowbits_ok": true
+  },
+  {
+   "p": 2351,
+   "nu2": 1,
+   "euler_lsb_ok": true,
+   "pohlig_hellman_lowbits_ok": true
+  }
+ ],
+ "C_padding_predictor": {
+  "p": 3049,
+  "mu_p": 0.255859375,
+  "advantage_per_bit": {
+   "0": 0.1279296875,
+   "1": 0.1279296875,
+   "2": 0.1279296875,
+   "3": 0.1279296875,
+   "4": 0.1279296875,
+   "5": 0.1279296875,
+   "6": 0.1279296875,
+   "7": 0.1279296875,
+   "8": 0.1279296875,
+   "9": 0.1279296875,
+   "10": 0.1279296875,
+   "11": 0.1279296875
+  },
+  "predicted": 0.1279296875
+ }
+}
