@@ -1,4 +1,4 @@
-"""Pass 16 check for the Takesue email: rule 12R on a periodic ring of N sites.
+"""Pass 16 check prompted by correspondence with S. Takesue: rule 12R on a periodic ring of N sites.
 Independent implementation (not pass 02's code). Second-order rule: cur' = f(l,c,r) XOR prev,
 f = rule 12 = c AND NOT l, which is Shiraishi-Takesue 2025 eq. (1).
 Claims checked, for N = 8..11 by complete enumeration of all 4^N states:
