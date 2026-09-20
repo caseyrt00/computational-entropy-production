@@ -1,6 +1,6 @@
 # One-way functions are computational entropy production
 
-Casey Thornton, independent researcher, caseythornton@utexas.edu. Version of 20 September 2026.
+Casey Thornton, Independent researcher, caseythornton@utexas.edu. Version of 20 September 2026.
 
 ---
 

@@ -1806,6 +1806,8 @@ def main():
             if not hm:
                 raise ValueError('header line under the title not understood: %r' % text[:80])
             author, date = inline(hm.group(1), ctx='author'), inline(hm.group(2), ctx='date')
+            # title block: name / affiliation / email on three lines (owner, 20 Sep 2026)
+            author = ' \\\\ '.join(part.strip() for part in author.split(', '))
             k += 1
             continue
         out.append(inline(text, refs=in_refs, ctx=text[:40]))
