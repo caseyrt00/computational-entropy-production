@@ -104,7 +104,7 @@ Where the paper is explicit about its own limits: Section 1.1 (what the results 
 
 **Numbering.** Theorems 1 to 4 are the paper's theorems; Theorem 0 is a known theorem restated for comparison; definitions, lemmas, propositions, corollaries and remarks are each numbered in order of appearance across the whole paper.
 
-**Direction of argument.** Every statement about a physical system is a parallel, named as such; no sentence runs from a physical fact to a conclusion about complexity; and "efficiently samplable" is a condition on the running time of a sampler, never a physical condition.
+**Direction of argument.** Physics is the frame of this paper, not its subject: every statement about a physical system is a parallel, named as such; no sentence runs from a physical fact to a conclusion about complexity; and "efficiently samplable" is a condition on the running time of a sampler, never a physical condition.
 
 **Logarithms** are base 2; **n** is the input length; "polynomial" means polynomial in n; "for all large n" means for all n beyond some threshold.
 
