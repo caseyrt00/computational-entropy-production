@@ -271,7 +271,6 @@ MATH = {          # inline mathematics: value is the body of $...$
     'n^{−O(1)} ≤ E_D[2^{−σ}] ≤ O(n²)': 'n^{-O(1)} \\le \\mathrm{E}_D[2^{-\\sigma}] \\le O(n^2)',
     'no io-OWF^O': '\\text{no io-OWF}^O',
     'NP': '\\mathrm{NP}',
-    'coNP/poly': '\\mathrm{coNP}/\\mathrm{poly}',      # B46: Bogdanov and Trevisan 2006 entry
     'NP ⊄ BPP': '\\mathrm{NP} \\not\\subseteq \\mathrm{BPP}',
     'NP ⊆ BPP': '\\mathrm{NP} \\subseteq \\mathrm{BPP}',
     'NP ⊆ BPP ⇒ BEM ⇒ no io-OWF': '\\mathrm{NP} \\subseteq \\mathrm{BPP} \\Rightarrow \\mathrm{BEM} \\Rightarrow \\text{no io-OWF}',
@@ -831,6 +830,8 @@ MATH = {          # inline mathematics: value is the body of $...$
 
 # final LaTeX, prose allowed: variables that sit inside a phrase, class names in prose
 RAW = {
+    # B50 Revision 1 (20 Sep 2026): the repository URL in the acknowledgement, set with hyperref's \url
+    'https://github.com/caseyrt00/computational-entropy-production': r'\url{https://github.com/caseyrt00/computational-entropy-production}',
     'io-OWF exist ⇔ some samplable D has': r'io-OWF exist $\Leftrightarrow$ some samplable $D$ has',
     'A answers NP questions about F': '$A$ answers $\\mathrm{NP}$ questions about $F$',
     'A-answer': '$A$-answer',
@@ -872,6 +873,8 @@ RAW = {
 
 # looks mathematical, is prose: item labels, identifiers, equation-label references
 PROSE = {
+    # B50 Revision 1 (20 Sep 2026): the thread names (B21..B37, E27), the record labels (S2, S3), the
+    # bibliography keys ([AMPS13] ... [LW95]), 'ar5iv' and '§3b' left with the long reference notes; coNP/poly too
     '(E1)',
     '(E2)',
     '(H1)',
@@ -888,7 +891,6 @@ PROSE = {
     '2nd',
     '56(3/4):371–402',
     'Appendix B',
-    'E27',
     'GKLO22',
     'LIPIcs 234:16',
     'LIPIcs 234:25',
@@ -900,16 +902,8 @@ PROSE = {
     'TR22-007',
     'TR25-089',
     'TR26-021',
-    '[BCGL92]',
-    '[GK22]',
-    '[Hir22]',
-    '[LM93]',
-    '[LW95]',
-    '§3b',
     '§IV C–D',
-    'B21',            # thread B21 (references, 15 Sep 2026)
     # --- added 15 Sep 2026 for thread B23 (E60) ---
-    'B23',            # thread B23
     # --- added 15 Sep 2026 for Lemma 6 (E63) ---
     'v1',             # arXiv version numbers in the reference list
     'v3',
@@ -918,18 +912,11 @@ PROSE = {
     '§V.A',
     '§V.C',
     # --- added 15 Sep 2026 for B38 (E68) ---
-    'B30',            # threads B30, B31, B36, B37 and their statements
-    'B31',
-    'B36',
-    'B37',
     'Obstruction A',  # the two obstructions of §7.5
     'Obstruction B',
     '§II.B',          # Kolchinsky and Wolpert 2020
-    'S2',             # entries of the reading ledger of research note B30 §0
-    'S3',
     '2211.00747',     # arXiv numbers in the reference list
     '10.1038/s41467-025-62081-6',
-    'ar5iv',          # the ar5iv rendering of arXiv papers
     'Theorem B.2',    # Kabanets and Kolokolova 2025, Appendix B
     'Lemma B.1',
     # --- added 15 Sep 2026 for Definition 10 (E70, thread B40) ---
@@ -939,9 +926,6 @@ PROSE = {
     # --- added 18 Sep 2026 for B42 (E72: the How-to-read section, the black-hole bullet, Aaronson 2016a/b) ---
     '2016a',          # Aaronson 2016a / 2016b, the split reference
     '2016b',
-    '[AMPS13]',       # Aaronson 2016b's citation keys, quoted in the reference list
-    '[HH13]',
-    'B26',            # thread B26 (reference list, Aaronson 2016b)
     # --- added 20 Sep 2026 for B46 (the nine formerly unread works, reference list) ---
     'TR08-005',       # Aaronson and Wigderson 2008, ECCC report number
     '2018/544',       # Ji, Liu and Song 2018, ePrint number
@@ -950,60 +934,11 @@ PROSE = {
     'B.2',
 }
 
-# the 32 distinct backtick spans: file names in the reference list, set in typewriter
+# the code spans, set in typewriter.  B50 Revision 1 (20 Sep 2026): the reference list's 50 file-name spans
+# (sources/..., passes/...) left the paper with the short reference entries; the reading record that
+# holds them is notes/READ_STATUS.md in the paper repository, the one span the paper now carries.
 TT = {
-    # 'HANDOFF.md' dropped in B46 (20 Sep 2026): the audit-list references left the paper
-    'passes/pass04/liupass2020.md',
-    'passes/pass04/wolfram2023.md',
-    'passes/pass11/takesue1990_relaxation.pdf',
-    'passes/pass16/research/13-shiraishi-takesue-2025-read.md',
-    'passes/pass16/research/14-takesue-1989-read.md',
-    'passes/pass16/research/16-reversible-computing-audit.md',
-    'passes/pass20/research/b24_coding_theorem_input.md',
-    'passes/pass20/research/b30_complexity_meters.md',      # E68
-    'passes/pass20/research/b31_instance_checkers.md',      # E68
-    'passes/pass20/research/b36_worst_case_hub.md',         # E68
-    'passes/pass20/wallA_attempt.md',                       # E68
-    'passes/pass20/research/mountain2_physics_tests.md',
-    'problems/one-way-functions/passes/pass16/sources/',
-    'sources/aaronson2003_pnp_independent.pdf',
-    'sources/aaronson2005_quant-ph0502072.pdf',
-    'sources/aaronson2016_pnp_survey.pdf',
-    'sources/aaronson2016_quantum_states_1607.05256.pdf',   # Aaronson 2016b (B42, 18 Sep 2026)
-    'sources/aaronson_kardes_hartle2025_suppes_slides.pptx',
-    'sources/ben-david_halevi_1992.ps',
-    'sources/bennett1973_logical_reversibility.pdf',
-    'sources/bennett_gacs_li_vitanyi_zurek1998_information_distance.pdf',
-    'sources/birget2007_arxiv0704.1569.pdf',
-    'sources/crooks1999_arxiv9901352.pdf',
-    'sources/ebtekar_hutter2024_arxiv2308.06927.pdf',
-    'sources/fredkin_toffoli1982_conservative_logic.pdf',
-    'sources/gklo_ccc2022.pdf',
-    'sources/goldreich2019_foundations_of_cryptography.pdf',
-    'sources/grunwald_vitanyi2004_arxiv0410002.pdf',
-    'sources/hilno_eprint2023-424.pdf',
-    'sources/hirahara_ccc2022_lipics234-26.pdf',
-    'sources/hmo_eccc_tr26-021.pdf',
-    'sources/hn_ccc2022_lipics234-25.pdf',
-    'sources/hn_eccc_tr21-161.pdf',
-    'sources/jarzynski2006_arxiv0603185.pdf',
-    'sources/kashefi_kerenidis2007_arxiv0511266.pdf',      # B43 (19 Sep 2026)
-    'sources/kk_eccc_tr25-089.pdf',
-    'sources/kolchinsky_wolpert2020_arxiv1912.04685.pdf',
-    'sources/landauer1961_irreversibility.pdf',
-    'sources/lu_oliveira_zimand_2022_arxiv2204.08312.pdf',
-    'sources/',
-    'sources/shiraishi_takesue_2025_arxiv2408.06691.pdf',
-    'sources/takesue1989_ergodic_I.pdf',
-    # B46 (20 Sep 2026): the nine formerly unread works and their secondary sources
-    'sources/aaronson_wigderson2008_eccc_tr08-005.pdf',
-    'sources/bogdanov_trevisan2006_wc2ac_sicomp.pdf',
-    'sources/brown_myrvold_uffink2009_arxiv0809.1304.pdf',
-    'sources/feigenbaum_fortnow1993_rsr.pdf',
-    'sources/fortnow1994_relativization_beatcs.pdf',
-    'sources/ji_liu_song2018_eprint544.pdf',
-    'sources/razborov_rudich1997_natural.pdf',
-    'sources/uffink_sep_boltzmann.txt',
+    'notes/READ_STATUS.md',
 }
 
 # the 52 displayed formulas, keyed by their exact source text (lines stripped and joined)
@@ -1536,23 +1471,28 @@ def inline(text, refs=False, ctx=''):
 
 
 # --------------------------------------------------------------------------------------------
-# 3. Tables.  Five, in source order; column specs by hand.  xltabular = tabularx that breaks
+# 3. Tables.  Seven, in source order; column specs by hand.  xltabular = tabularx that breaks
 #    across pages, which the two appendix tables need; every table is exactly \textwidth wide.
 # --------------------------------------------------------------------------------------------
 
 L = r'>{\hsize=%s\hsize\raggedright\arraybackslash}X'
 
 TABLES = [
-    # 0: the objects in the order they appear (4 cols), How to read this paper (added 18 Sep 2026, B42)
+    # B50 Revision 1 (20 Sep 2026): two tables added before the five below, which shift from 0-4 to 2-6
+    # 0: the results box (3 cols: number, statement, standing), after the abstract's plain reading
+    dict(size=r'\small', cols=r'@{}' + L % '0.40' + L % '1.65' + L % '0.95' + r'@{}'),
+    # 1: five rows of the Crooks correspondence (2 cols), section 1 after the four theorem bullets
+    dict(size=r'\small', cols=r'@{}' + L % '1.00' + L % '1.00' + r'@{}'),
+    # 2: the objects in the order they appear (4 cols), How to read this paper (added 18 Sep 2026, B42)
     dict(size=r'\small', cols=r'@{}' + L % '0.72' + L % '0.90' + L % '0.62' + L % '1.76' + r'@{}'),
-    # 1: Crooks's setup against this paper's (3 cols), section 2.6
+    # 3: Crooks's setup against this paper's (3 cols), section 2.6
     dict(size=r'\small', cols=r'@{}' + L % '1.05' + L % '1.05' + L % '0.90' + r'@{}'),
-    # 2: one statement, two instances (3 cols), section 8.4
+    # 4: one statement, two instances (3 cols), section 8.4
     dict(size=r'\small', cols=r'@{}' + L % '0.50' + L % '1.15' + L % '1.35' + r'@{}'),
-    # 3: the Crooks-HILNO correspondence, seventeen rows (5 cols), appendix A.1
+    # 5: the Crooks-HILNO correspondence, seventeen rows (5 cols), appendix A.1
     dict(size=r'\footnotesize', sep='3pt',
          cols=r'@{}' + L % '0.22' + L % '1.22' + L % '1.78' + L % '1.38' + L % '0.40' + r'@{}'),
-    # 4: one statement, two instances, thirteen rows (5 cols), appendix A.2
+    # 6: one statement, two instances, thirteen rows (5 cols), appendix A.2
     dict(size=r'\footnotesize', sep='3pt',
          cols=r'@{}' + L % '0.24' + L % '0.66' + L % '1.30' + L % '1.90' + L % '0.90' + r'@{}'),
 ]
@@ -1602,6 +1542,8 @@ PREAMBLE = r"""%% Generated by md_to_tex_paper.py from ENTROPY_PRODUCTION.md -- 
 \usepackage{xltabular}
 \usepackage{array}
 \usepackage{enumitem}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning}
 \usepackage{microtype}
 \usepackage[hidelinks,pdfusetitle]{hyperref}
 
@@ -1611,6 +1553,11 @@ PREAMBLE = r"""%% Generated by md_to_tex_paper.py from ENTROPY_PRODUCTION.md -- 
 \hyphenpenalty=200
 \renewcommand{\arraystretch}{1.12}
 \allowdisplaybreaks
+%% A sentence that introduces a table is not left alone at the foot of a page: end the page first
+%% when fewer than seven lines remain (B50 Phase 2, 20 Sep 2026).  \pagegoal is \maxdimen on an
+%% empty page, so nothing happens there.
+\newcommand{\keepwithtable}{\par\begingroup\dimen0=\pagegoal\advance\dimen0 by -\pagetotal
+  \ifdim\dimen0<7\baselineskip\newpage\fi\endgroup}
 
 %% Theorem-like environments with the note's own numbers.  amsthm numbers automatically; the
 %% inner/outer pair below lets each instance carry its number by hand, so Theorem 0 stays 0 and
@@ -1670,12 +1617,25 @@ def display(buf):
 
 def blocks(lines):
     """Split the markdown into typed blocks: ('h', level, text) ('d', [lines]) ('t', rows)
-    ('ul', items) ('ol', items) ('p', text)."""
+    ('ul', items) ('ol', items) ('p', text) ('fig', [lines])."""
     i, out = 0, []
     while i < len(lines):
         line = lines[i]
         if not line.strip() or line.strip() == '---':
             i += 1
+            continue
+        if line.startswith('```tex-figure'):
+            # B50 Phase 2 (20 Sep 2026): a fenced block whose body is LaTeX passed through verbatim
+            # inside a figure environment; the italic paragraph after it is the caption (see main)
+            buf = []
+            i += 1
+            while i < len(lines) and not lines[i].startswith('```'):
+                buf.append(lines[i])
+                i += 1
+            if i >= len(lines):
+                raise ValueError('tex-figure fence not closed')
+            i += 1
+            out.append(('fig', buf))
             continue
         if line.startswith('#'):
             level = len(line) - len(line.lstrip('#'))
@@ -1729,6 +1689,7 @@ def main():
     title = None
     author = date = None
     n_tables = 0
+    n_figs = 0
     in_refs = False
     env_open = None          # name of the open theorem-like environment, or None
     k = 0
@@ -1767,6 +1728,26 @@ def main():
             out.append(table(b[1], n_tables))
             n_tables += 1
             k += 1
+            continue
+
+        if kind == 'fig':
+            # B50 Phase 2 (20 Sep 2026): the TikZ body verbatim, the next paragraph as the caption.  The
+            # markdown caption reads "*Figure N. <caption>.* *Plain reading: ...*"; LaTeX supplies the
+            # "Figure N:" prefix itself, so it is stripped here; the plain reading stays its own \emph.
+            close_env()
+            body = '\n'.join(b[1])
+            if any(ord(c) > 127 for c in body):
+                raise ValueError('tex-figure body must be pure ASCII')
+            nb = bl[k + 1] if k + 1 < len(bl) else None
+            m = re.match(r'^\*Figure (\d+)\. (.+?)\* (\*Plain reading: .+\*)$', nb[1]) if nb and nb[0] == 'p' else None
+            if not m:
+                raise ValueError('tex-figure block not followed by an italic "*Figure N. ...* *Plain reading: ...*" caption')
+            n_figs += 1
+            if int(m.group(1)) != n_figs:
+                raise ValueError('figure numbered %s in the markdown, %d in order' % (m.group(1), n_figs))
+            caption = inline(m.group(2), ctx='figure %d caption' % n_figs) + ' ' + inline(m.group(3), ctx='figure %d plain reading' % n_figs)
+            out.append('\\begin{figure}[t]\n\\centering\n' + body + '\n\\caption{' + caption + '}\n\\end{figure}')
+            k += 2
             continue
 
         if kind in ('ul', 'ol'):
@@ -1810,6 +1791,11 @@ def main():
             author = ' \\\\ '.join(part.strip() for part in author.split(', '))
             k += 1
             continue
+        if k + 1 < len(bl) and bl[k + 1][0] == 't':
+            # a lead-in sentence stays on the page with its table: if fewer than seven lines are left,
+            # the page is ended before the sentence (B50 Phase 2, 20 Sep 2026; \keepwithtable in the
+            # preamble; \nopagebreak does not survive xltabular's own start)
+            out.append('\\keepwithtable')
         out.append(inline(text, refs=in_refs, ctx=text[:40]))
         k += 1
     close_env()
@@ -1829,6 +1815,8 @@ def main():
         raise SystemExit('dictionary entries never used: %s' % sorted(unused))
     if len(ENVLOG) != 48:
         raise SystemExit('expected 48 theorem-like environments, found %d: %s' % (len(ENVLOG), ENVLOG))
+    if n_figs != 1:
+        raise SystemExit('expected 1 tex-figure block (B50 Phase 2), found %d' % n_figs)
 
     tex = PREAMBLE % {'title': title, 'author': author, 'date': date} + '\n\n' + '\n\n'.join(out) + '\n\n\\end{document}\n'
     bad = sorted({c for c in tex if ord(c) > 127})
@@ -1836,9 +1824,9 @@ def main():
         raise SystemExit('non-ASCII characters survived: %s' % [hex(ord(c)) for c in bad])
     open(OUT, 'w', encoding='utf-8').write(tex)
     nfrag = len({k for c, k in USED if c in ('math', 'raw', 'prose')})
-    print('wrote %s  (%d bytes, %d tables, %d displays, %d fragment keys used, %d code spans, '
+    print('wrote %s  (%d bytes, %d tables, %d figure, %d displays, %d fragment keys used, %d code spans, '
           '%d theorem-like environments, pure ASCII)'
-          % (os.path.basename(OUT), len(tex), n_tables, len([1 for c, k in USED if c == 'display']),
+          % (os.path.basename(OUT), len(tex), n_tables, n_figs, len([1 for c, k in USED if c == 'display']),
              nfrag, len({k for c, k in USED if c == 'tt'}), len(ENVLOG)))
     if '--envs' in sys.argv:
         for e in ENVLOG:

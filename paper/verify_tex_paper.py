@@ -4,7 +4,8 @@ Extracts the PDF text with `pdftotext -raw` (content-stream order, which keeps e
 cell in one piece; the -layout mode interleaves neighbouring cells line by line) and checks,
 mechanically:
   A  every distinct numeric token of the markdown appears in the PDF;
-  B  every cell of the five markdown tables appears in the PDF;
+  B  every cell of the seven markdown tables appears in the PDF (the results box and the five dictionary
+     rows of section 1 added in B50 Revision 1, 20 Sep 2026);
   F  every heading appears verbatim, numbers included, and in the markdown's order (the numbered
      sections are 1 to 9 since B48, 20 Sep 2026: Abstract first, then 1 with 1.1-1.3, Theorem 4 as
      section 6, the old 6-8 as 7-9, Appendix A, Appendix B with the oracle proofs);
@@ -12,13 +13,19 @@ mechanically:
      Propositions 1-13, Definitions 1-10, Remarks 1-6, Corollaries 1-2) appears, with its own number;
   P  all N_PLAIN italic plain readings appear, and in the .tex each one is an emph group that is
      not nested inside another italic group (a nested emph would flip upright);
-  L  the counts of every label and read-status tag agree (Proved, Proved-conditional,
-     Proved; known, Proof, Read, cited via, not opened; [Unverified] dropped 20 Sep 2026; the
-     'not read' status and the body dagger dropped in B46, 20 Sep 2026, when the last nine unread
-     works were read; [Inference] and [Speculation] dropped in B47, 20 Sep 2026, when the bracket
-     tags were replaced by hedges in words);
+  L  the counts of the proof label and the two read-status brackets agree (Proof; [read; [via.
+     B50 Revision 1, 20 Sep 2026: the Proved / Proved-conditional / Proved; known labels became
+     Proof or moved into statement heads, and the reference list's Read / cited via / not opened
+     notes became one bracket per entry; [Unverified] dropped 20 Sep 2026; the 'not read' status
+     and the body dagger dropped in B46, 20 Sep 2026, when the last nine unread works were read;
+     [Inference] and [Speculation] dropped in B47, 20 Sep 2026, when the bracket tags were
+     replaced by hedges in words);
   D  every displayed formula survives, word by word;
-  G  every code-span file name appears;
+  G  every code-span file name appears (one since Revision 1: notes/READ_STATUS.md);
+  X  the one ```tex-figure block (B50 Phase 2) is typeset as one figure environment with a
+     tikzpicture, its node labels and its caption with the plain reading appear in the PDF; the
+     block is stripped from the markdown before every other check, since its TikZ source is not
+     text of the paper;
   I  every markdown paragraph appears in the PDF, whole and in one piece;
   Z  the build log has no overfull box wider than 10pt and no missing character.
 
@@ -37,7 +44,7 @@ MD = os.path.join(HERE, 'ENTROPY_PRODUCTION.md')
 PDF = os.path.join(HERE, 'ENTROPY_PRODUCTION.pdf')
 TEX = os.path.join(HERE, 'ENTROPY_PRODUCTION.tex')
 LOG = os.path.join(HERE, 'ENTROPY_PRODUCTION.log')
-N_PLAIN = 99          # italic plain readings: 98 after formulas or tables (the plain reading of the abstract among them),
+N_PLAIN = 100         # italic plain readings: 99 after formulas, tables or the figure (the plain reading of the abstract among them),
                       # plus the mention in the Conventions (section 1.3 since B48, 20 Sep 2026; the section numbers in the
                       # history below are those before B48, when the Conventions and the abstract preceded section 1)
                       # (62 at E52; 64 after the B20 edit of 15 Sep 2026 added the section now numbered 1.1 (1.4 at E55) and the
@@ -59,7 +66,8 @@ N_PLAIN = 99          # italic plain readings: 98 after formulas or tables (the 
                       # B42: the sandwich display one; 99 after B43 of 19 Sep 2026, E73-E76: Proposition 10
                       # one, Lemma 12 one, Proposition 11 four (parts (a), (b), (c) and its proof),
                       # Propositions 12 and 13 one each, Remarks 5 and 6 one each, the axiom paragraph of
-                      # Section 8.4 one, with no display)
+                      # Section 8.4 one, with no display; 100 after B50 Phase 2 of 20 Sep 2026: the figure's caption
+                      # carries its own plain reading; the 33 readings shortened by B50 item 5 were rewritten in place)
 N_STMT = 48           # theorem-like statements: 5 theorems, 12 lemmas, 13 propositions, 10 definitions,
                       # 6 remarks, 2 corollaries (32 at E52: 6 propositions, 8 definitions; +1 each at E57;
                       # E60 added Proposition 8 and Corollary 1, the paper's first corollary; E63 added
@@ -133,6 +141,10 @@ def words(text):
 
 def main():
     md = open(MD, encoding='utf-8').read()
+    # the tex-figure block is LaTeX source, not text of the paper: cut it out before every check
+    # (B50 Phase 2, 20 Sep 2026); its own check is X below
+    figs = re.findall(r'^```tex-figure\n(.*?)^```\n', md, re.S | re.M)
+    md = re.sub(r'^```tex-figure\n.*?^```\n', '', md, flags=re.S | re.M)
     for a, b in LIG.items():
         md = md.replace(a, b)
     pdf = pdftext(PDF)
@@ -178,7 +190,8 @@ def main():
     check(not bad, 'B  all %d non-empty cells of the %d markdown tables appear in the PDF '
                    '(%d of them wrapped, matched word by word)' % (len(cells), ntab, wrapped),
           'missing: %s' % bad[:12])
-    check(ntab == 5, 'B2 five tables in the markdown (the symbol table of How to read this paper, B42)', str(ntab))
+    check(ntab == 7, 'B2 seven tables in the markdown (results box and five dictionary rows, B50; symbol table, B42; '
+                     'Crooks setup 2.6; two instances 8.4; A.1; A.2)', str(ntab))
 
     # ---- F. headings -----------------------------------------------------------------------
     heads = [h.strip() for h in re.findall(r'^#{2,3} (.+)$', md, re.M)]
@@ -229,12 +242,15 @@ def main():
     check(nums == [0, 1, 2, 3, 4], 'T2 the theorems are numbered 0, 1, 2, 3, 4', str(nums))
     check(not badt, 'T3 every statement head (kind, number, title) and its first sentence appear',
           str(badt))
+    q = 'Question 1 (the open problem).'
+    check(md.count('**' + q + '**') == 1 and squash(q) in pdf_sq and 'Open Problem (status' not in md,
+          'T4 the open problem is stated once as Question 1 (B50 item 3) and its head appears in the PDF')
 
     # ---- P. plain readings -----------------------------------------------------------------
     prs = re.findall(r'(?<!\*)\*Plain reading[^*]*\*', md)
     badp = [p[:50] for p in prs if squash(p) not in pdf_sq and not all(w in pdf_sq for w in words(p))]
-    check(len(prs) == N_PLAIN, 'P1 %d italic plain readings in the markdown (%d after formulas or '
-                               'tables, the abstract\'s among them, plus the mention in the Conventions, 1.3)' % (N_PLAIN, N_PLAIN - 1), str(len(prs)))
+    check(len(prs) == N_PLAIN, 'P1 %d italic plain readings in the markdown (%d after formulas, tables or '
+                               'the figure, the abstract\'s among them, plus the mention in the Conventions, 1.3)' % (N_PLAIN, N_PLAIN - 1), str(len(prs)))
     check(not badp, 'P2 all %d plain readings appear in the PDF' % len(prs), str(badp))
     tex = open(TEX, encoding='utf-8').read()
     emph = [m.start() for m in re.finditer(r'\\emph\{Plain reading', tex)]
@@ -255,14 +271,12 @@ def main():
     md_plain = re.sub(r'\*', '', md_flat)
     def count(pat, text):
         return len(re.findall(pat, text))
-    LABELS = [('Proved-conditional', r'Proved-conditional'),
-              ('Proved; known', r'Proved; known'),
-              ('Proved (all forms)', r'\bProved\b'),
-              ('Proof', r'\bProof\b'),
-              ('Read (read-status)', r'\bRead\b'),
-              ('cited via', r'cited via'),
-              ('Not consulted', r'not opened')]        # B42 added a dagger row and a 'not read' row; both dropped in B46 (20 Sep 2026): no unread work remains;
-                                                       # the [Inference] and [Speculation] rows dropped in B47 (20 Sep 2026): the tags became ordinary hedges
+    LABELS = [('Proof', r'\bProof\b'),
+              ('[read (read-status)', r'\[read'),
+              ('[via (read-status)', r'\[via')]        # B42 added a dagger row and a 'not read' row; both dropped in B46 (20 Sep 2026): no unread work remains;
+                                                       # the [Inference] and [Speculation] rows dropped in B47 (20 Sep 2026): the tags became ordinary hedges;
+                                                       # the three Proved rows and the Read / cited via / not opened rows dropped in B50 Revision 1 (20 Sep 2026)
+    check('Proved' not in md_plain, 'L0 no Proved label remains (B50 item 1: every statement has Proof or a hypothesis in its head)')
     # a table that breaks across pages repeats its header row on every page (xltabular);
     # a tag inside a header row is therefore counted once more per extra page
     header_rows = []
@@ -294,6 +308,19 @@ def main():
     spans = sorted(set(re.findall(r'`([^`]+)`', md)))
     badg = [s for s in spans if squash(s) not in pdf_sq]
     check(not badg, 'G  all %d distinct code-span file names appear' % len(spans), str(badg))
+
+    # ---- X. the figure ---------------------------------------------------------------------
+    nfig_tex = tex.count('\\begin{figure}')
+    ok_env = (len(figs) == 1 and nfig_tex == 1 and tex.count('\\begin{tikzpicture}') == 1
+              and figs[0].strip() in tex and re.search(r'\\begin\{figure\}\[t\]\n\\centering\n.*?\\caption\{.*?\}\n\\end\{figure\}', tex, re.S) is not None)
+    check(ok_env, 'X1 one tex-figure block in the markdown, typeset verbatim as one figure environment with one tikzpicture and a caption',
+          '%d blocks, %d figure envs' % (len(figs), nfig_tex))
+    labels = ['NP', 'BPP', 'BEM', 'no io-OWF', 'Thm 3(b)', 'Thm 3(a)', 'Question 1', 'no relativizing proof (Prop. 10, conditional)']
+    badx = [l for l in labels if squash(l) not in pdf_sq]
+    capm = re.search(r'^\*Figure 1\. (.+?)\* (\*Plain reading: .+\*)$', md, re.M)
+    cap_ok = capm is not None and squash('Figure 1: ' + capm.group(1)) in pdf_sq and squash(capm.group(2)) in pdf_sq
+    check(not badx and cap_ok, 'X2 the figure\'s node labels, its caption ("Figure 1: ...") and its plain reading appear in the PDF',
+          'missing labels %s; caption %s' % (badx, cap_ok))
 
     # ---- I. every paragraph, whole ---------------------------------------------------------
     pagenumless = []
