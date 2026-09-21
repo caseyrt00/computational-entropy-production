@@ -5,7 +5,7 @@ One-way functions exist if and only if some efficiently samplable process produc
 **Status:** prepared for submission to ECCC; the submission date and the report number
 (TR26-xxx) will be filled in here when known.
 
-**Author:** Casey Thornton, independent researcher — caseythornton@utexas.edu
+**Author:** Casey Thornton — caseythornton@utexas.edu
 
 ## What is here
 
