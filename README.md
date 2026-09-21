@@ -13,8 +13,8 @@ One-way functions exist if and only if some efficiently samplable process produc
   `ENTROPY_PRODUCTION.tex`, the built `ENTROPY_PRODUCTION.pdf`, the converter
   `md_to_tex_paper.py`, the verifier `verify_tex_paper.py`, the span dictionary
   `typeset_notes_paper.md`, and `COVER_ABSTRACT.md` (the short abstract).
-- `referees/` — four blind referee reports on disjoint parts of the paper, run before submission;
-  see `referees/README.md`.
+- `referees/` — five blind referee reports, four on disjoint parts of the paper and one on the whole of
+  Revision 1, run before submission; see `referees/README.md`.
 - `notes/` — `READ_STATUS.md`, the full reading record for every work the paper cites (the paper's
   reference list carries one short bracket per entry and points here), and the eleven reading notes
   that record cites by file name.

@@ -26,8 +26,12 @@
 % A sentence that introduces a table is not left alone at the foot of a page: end the page first
 % when fewer than seven lines remain (B50 Phase 2, 20 Sep 2026).  \pagegoal is \maxdimen on an
 % empty page, so nothing happens there.
-\newcommand{\keepwithtable}{\par\begingroup\dimen0=\pagegoal\advance\dimen0 by -\pagetotal
-  \ifdim\dimen0<7\baselineskip\newpage\fi\endgroup}
+% B50 Phase 3 (20 Sep 2026): the Phase 2 form read \pagegoal-\pagetotal, which is stale when the paragraph
+% before the lead-in straddles a page (it broke page 5 after one line, 59 -> 60 pp.); this is the glue-and-
+% penalty idiom of the needspace package, decided by the page builder itself.
+\newcommand{\keepwithtable}{\par\begingroup\dimen0=7\baselineskip
+  \vskip 0pt plus \dimen0\relax \penalty-100 \vskip 0pt plus -\dimen0\relax
+  \vskip\dimen0 \penalty9999 \vskip-\dimen0 \vskip 0pt\relax\endgroup}
 
 % Theorem-like environments with the note's own numbers.  amsthm numbers automatically; the
 % inner/outer pair below lets each instance carry its number by hand, so Theorem 0 stays 0 and
@@ -48,8 +52,8 @@
 \newenvironment{corollaryx}[1]{\renewcommand\theinnercorollary{#1}\innercorollary}{\endinnercorollary}
 
 \title{One-way functions are computational entropy production}
-\author{Casey Thornton \\ Independent researcher \\ caseythornton@utexas.edu}
-\date{Version of 20 September 2026}
+\author{Casey Thornton\thanks{caseythornton@utexas.edu}}
+\date{20 September 2026}
 \hypersetup{pdfauthor={Casey Thornton}}
 
 \begin{document}
@@ -62,7 +66,7 @@
 
 One-way functions exist if and only if some efficiently samplable process produces more than logarithmic computational entropy on average, for infinitely many input lengths. We make this precise. For a polynomial-time samplable distribution $D$ on pairs $(x, y)$, the computational entropy production of a pair is $\sigma$ = log $D(x, y)$ + $\mathrm{pK}^t(y) + \mathrm{pK}^t(x \mid y)$, where $\mathrm{pK}^t$ is the probabilistic time-bounded Kolmogorov complexity as defined by Hirahara, Ilango, Lu, Nanashima and Oliveira (2023, HILNO below) following Goldberg, Kabanets, Lu and Oliveira (2022): the log-probability the process assigns to the pair, against the length of a bounded observer's shortest fast description of it, output first, then input given output. We prove unconditionally that $\mathrm{E}_D[2^{-\sigma}]$ lies between an inverse polynomial and a polynomial in $n$ and that $\mathrm{E}_D[\sigma] \ge -O(\log n)$: a time-bounded fluctuation inequality and a computational second law. We show that, up to a polynomial and outside a $1/n$ slice of outputs, $\sigma$ is small on a pair exactly when an efficient sampler, given the output, recovers the input with about the right odds, HILNO's universal sampler serving as the witness: dissipation, in this sense, is the hardness of running the process backward. The equivalence in the first sentence is HILNO's duality restated in these terms, for infinitely-often one-way functions. For the antisymmetric Zurek defect, one-way functions force superpolynomial exponential moments, and bounded moments sit between $\mathrm{NP} \subseteq \mathrm{BPP}$ and the non-existence of one-way functions; whether the lower arrow reverses is left open, with a conditional relativization barrier on that arrow and oracle evidence on the other. Physics is the frame, not the subject.
 
-\emph{Plain reading of the abstract: a fast random process makes pairs. Ask an observer with limited time to tell the story of each pair backwards, output first. The paper counts how many more bits that backward story costs than the process itself paid. Two easy facts about short descriptions show that this cost is, on average, never much below zero, for every fast process, with no assumptions. A known theorem then says the cost is large on average for some fast process exactly when one-way functions exist. A further result says the cost is small on a pair exactly when a fast machine, shown the output, can guess the input with about the right odds: dissipation is the hardness of running the process backward. The remaining result compares the two directions of description and shows that one-way functions make that two-sided comparison blow up; whether the reverse holds is left open, and so is which world we live in.}
+\emph{In words: a fast random process makes pairs. Ask an observer with limited time to tell the story of each pair backwards, output first. The paper counts how many more bits that backward story costs than the process itself paid. Two easy facts about short descriptions show that this cost is, on average, never much below zero, for every fast process, with no assumptions. A known theorem then says the cost is large on average for some fast process exactly when one-way functions exist. A further result says the cost is small on a pair exactly when a fast machine, shown the output, can guess the input with about the right odds: dissipation is the hardness of running the process backward. The remaining result compares the two directions of description and shows that one-way functions make that two-sided comparison blow up; whether the reverse holds is left open, and so is which world we live in.}
 
 \keepwithtable
 
@@ -77,11 +81,11 @@ One-way functions exist if and only if some efficiently samplable process produc
 \endhead
 Theorem 1 & For every polynomial-time samplable process, unconditionally: $\mathrm{E}_D[2^{-\sigma}]$ lies between an inverse polynomial and a polynomial in $n$, and $\mathrm{E}_D[\sigma] \ge -O(\log n)$. & new \\
 \addlinespace[3pt]
-Theorem 2 & One-way functions exist iff some polynomial-time samplable process has mean production above $c \log n$ for infinitely many $n$, for every constant $c$. & restated: HILNO Theorem 1 \\
+Theorem 2 & One-way functions exist iff some polynomial-time samplable process has, at every polynomial time bound, mean production above $c \log n$ for infinitely many $n$, for every constant $c$. & restated: HILNO Theorem 1 \\
 \addlinespace[3pt]
 Theorem 3 & One-way functions force superpolynomial exponential moments of the same-time Zurek defect, infinitely often; $\mathrm{NP} \subseteq \mathrm{BPP}$ $\Rightarrow$ bounded moments $\Rightarrow$ no one-way functions. & assembled: HILNO's Lemma 20 argument and HILNO's Theorem 4, with the Kraft sums of Section 3 \\
 \addlinespace[3pt]
-Theorem 4 & $\sigma$ is small on a pair iff the universal sampler inverts it with the right odds, up to a polynomial and outside a $1/n$ slice. & assembled: HILNO Proposition 22, Lu--Oliveira--Zimand coding theorem \\
+Theorem 4 & $\sigma$ is small on a pair iff the universal sampler, handed the output, produces the input with the right odds, up to a polynomial and outside a $1/n$ slice. & assembled: HILNO Proposition 22, Lu--Oliveira--Zimand coding theorem \\
 \bottomrule
 \end{xltabular}}
 \par\medskip
@@ -99,7 +103,7 @@ This paper carries out the same two lines with a polynomial-time sampler in the 
 
 \item \textbf{Theorem 2.} One-way functions exist (infinitely-often, the notion used throughout) if and only if some polynomial-time samplable process has, for every constant $c$, mean computational entropy production above $c \log n$ for infinitely many $n$. This is HILNO's Theorem 1 read in the vocabulary of Theorem 1; it is a restatement, not a new theorem.
 
-\item \textbf{Theorem 3.} For the difference of the two one-sided productions of a pair, the Zurek defect, the existence of one-way functions forces both exponential moments to be superpolynomial infinitely often; whether the converse holds is the paper's open problem, Question 1.
+\item \textbf{Theorem 3.} For the difference of the two one-sided productions of a pair, the Zurek defect, the existence of one-way functions forces, for the pair distribution of the function and for its swap, one exponential moment each to be superpolynomial infinitely often, so bounded exponential moments fail in both directions; whether the converse holds is the paper's open problem, Question 1.
 
 \item \textbf{Theorem 4.} Up to a polynomial and outside a $1/n$ slice of outputs, a process has small computational entropy production on a pair exactly when a fast machine, handed the output, can guess the input with about the right odds, and the universal sampler always serves as the witness. It is assembled from known parts, HILNO's universal sampler and the coding theorem with an auxiliary input, and its content is the identification: dissipation in this paper's sense is the failure of the reverse conditional to be dominated by an efficient sampler (Section 6).
 
@@ -134,14 +138,15 @@ The full seventeen-row correspondence is Appendix A.1.
 The route of the paper in one line, with the standing of each arrow:
 \[
 \begin{aligned}
-&\text{some polynomial-time samplable process has mean production} \ge \omega(\log n) \text{ i.o.} \\
+&\text{some polynomial-time samplable process has, at every polynomial time bound,} \\
+&\qquad\text{mean production above } c \log n \text{ for infinitely many } n\text{, for every } c \\
 &\qquad\Leftrightarrow\;\; \text{one-way functions exist} \;\;\Rightarrow\;\; \mathrm{P} \ne \mathrm{NP}.
 \end{aligned}
 \]
 
-\emph{Plain reading: a fast process that dissipates, in the sense defined in Section 2, is the same thing as a one-way function (Theorem 2), and a one-way function forces $\mathrm{P} \ne \mathrm{NP}$ (standard, Section 2.3, and not known to reverse); Theorem 1 says the left-hand quantity cannot be very negative for any process, and Theorem 3 refines it by a second, antisymmetric quantity and leaves one direction open.}
+\emph{In words: a fast process that dissipates, in the sense defined in Section 2, is the same thing as a one-way function (Theorem 2), and a one-way function forces $\mathrm{P} \ne \mathrm{NP}$ (standard, Section 2.3, and not known to reverse); Theorem 1 says the left-hand quantity cannot be very negative for any process, and Theorem 3 refines it by a second, antisymmetric quantity and leaves one direction open.}
 
-What is new and what is restated, in one sentence: the time-bounded fluctuation inequality of Theorem 1 and the reading of HILNO as mean entropy production in Theorem 2 were found in no source, while the interpretation in Section 9 adds nothing beyond what [Aaronson 2005, \S{}10], [Aaronson 2016a, footnote 20] and [Aaronson, Kardes and Hartle 2025, slide 27; unpublished] already say, and it says so.
+What is new and what is restated, in one sentence: the time-bounded fluctuation inequality of Theorem 1 was found in no source; Theorem 2 restates HILNO's Theorem 1, and its reading as mean entropy production was found in no source; Theorems 3 and 4 are assembled from named parts of HILNO and Lu--Oliveira--Zimand, as the results box says; Propositions 4(a), 6 and 10 are claimed as new where they are stated (\S{}6, \S{}8.3); and the interpretation in Section 9 adds nothing beyond what [Aaronson 2005, \S{}10], [Aaronson 2016a, footnote 20] and [Aaronson, Kardes and Hartle 2025, slide 27; unpublished] already say, and it says so.
 
 The unbounded-time ancestor of Theorem 1 is in print: for ordinary Kolmogorov complexity, the chain Kraft's inequality, then an integral fluctuation inequality, then Jensen, is [Ebtekar and Hutter 2024, Lemma 5, Theorem 7 and eq. (44)]. Nothing in that work has a time bound, and one-way functions do not appear in it. The time-bounded version, and its cryptographic reading, are the content here.
 
@@ -154,12 +159,12 @@ The audience is complexity theorists. A reader who skips every sentence about ph
 
 Theorems 1, 2 and 4 hold in every one of Impagliazzo's five worlds [Impagliazzo 1995]; in Pessiland, where $\mathrm{P} \ne \mathrm{NP}$ and no one-way function exists, Theorem 2 says that every polynomial-time samplable process has mean production at most $O(\log n)$, so the dissipation statement is not a restatement of $\mathrm{P} \ne \mathrm{NP}$: the two are not known to be equivalent, and in Pessiland they would have different truth values. Theorem 3 does not decide which world holds, and no sentence of the paper claims that a physical process dissipates. Question 1 (Section 8) is not shown to be hard, only immune to relativizing proof for the bottom arrow of the same-time sandwich, $\text{no io-OWF} \Rightarrow \mathrm{BEM}$ (Proposition 10, conditional as stated there). For the top arrow the relativization test has been run only on the natural test distributions of two errorless worlds (Proposition 11, informal); whether same-time $\mathrm{BEM}$ holds relative to either oracle is open, so no barrier statement is made for that arrow. Read as a principle, the assumption, in its quantum-secure form (one-way functions secure against quantum algorithms), predicts that no efficiently measurable observable is a complexity meter, an instrument whose reading tracks the circuit complexity or the description length of the state it is applied to (an inference, not proved here: the sentence identifies ``efficiently measurable'' with ``implemented by a polynomial-size quantum circuit'', the quantum form of the extended Church--Turing thesis, an identification made here and nowhere else in the paper, Theorems 1 to 4 being stated for $\mathrm{BPP}$ samplers (\S{}7); and its general form rests on the existence of pseudorandom quantum states under quantum-secure one-way functions, Ji, Liu and Song 2018). The field has proved this one observable at a time: pseudoentanglement for entanglement entropy [Aaronson, Bouland, Fefferman, Ghosh, Vazirani, Zhang and Zhou 2024, Corollary 1.0.1], and pseudochaotic dynamics for the out-of-time-order correlator, whose Theorem 1 is unconditional [Lee, Kwon and Cho 2025, Theorem 1]. So the principle's only observational signature is the continued absence of the instrument.
 
-\emph{Plain reading: the two main theorems are true no matter which of the five possible worlds we live in. In the world where hard problems exist but nothing is one-way, Theorem 2 says nothing dissipates; so ``something dissipates'' is not ``hard problems exist'' in new words, and nobody knows whether the two are equivalent. The paper does not say which world is real, does not say that any physical thing dissipates, and does not show its open problem is hard, only that one family of proof methods cannot deliver the bottom arrow; for the top arrow nothing of the kind is shown. And the assumption, read as a law about the world, predicts that no lab instrument can read how complex a state is: such an instrument would tell a cheaply made fake apart from a truly random state, which the assumption says nothing efficient can do, if fast measurements are fast quantum circuits. Physicists have been proving this one instrument at a time; so the only thing the principle shows the laboratory is the instrument that keeps not existing.}
+\emph{In words: Theorems 1, 2 and 4 are true no matter which of the five possible worlds we live in. In the world where hard problems exist but nothing is one-way, Theorem 2 says nothing dissipates; so ``something dissipates'' is not ``hard problems exist'' in new words, and nobody knows whether the two are equivalent. The paper does not say which world is real, does not say that any physical thing dissipates, and does not show its open problem is hard, only that one family of proof methods cannot deliver the bottom arrow; for the top arrow nothing of the kind is shown. And the assumption, read as a law about the world, predicts that no lab instrument can read how complex a state is: such an instrument would tell a cheaply made fake apart from a truly random state, which the assumption says nothing efficient can do, if fast measurements are fast quantum circuits. Physicists have been proving this one instrument at a time; so the only thing the principle shows the laboratory is the instrument that keeps not existing.}
 
 \subsection*{1.2 How to read this paper}
 \phantomsection\addcontentsline{toc}{subsection}{1.2 How to read this paper}
 
-Three pages carry the claim: Section 1 (the chain and the four theorems), Section 2.5 (the definition of computational entropy production) and Section 9.2 (what it measures: lost against hidden). The proofs are Sections 3 to 6. Section 8 is the open problem, Question 1, and its placement, and can be skipped on a first reading. Section 9 is the physics frame, every sentence of it a labelled parallel. Every displayed formula is followed by an italic \emph{plain reading} that says what it means in words; a reader who does not want the notation can read the theorem statements and the plain readings alone.
+Three pages carry the claim: Section 1 (the chain and the four theorems), Section 2.5 (the definition of computational entropy production) and Section 9.2 (what it measures: lost against hidden). The proofs are Sections 3 to 6. Section 8 is the open problem, Question 1, and its placement, and can be skipped on a first reading. Section 9 is the physics frame, every sentence of it a labelled parallel. Every displayed formula is followed by an italic sentence beginning \emph{In words} that says what it means; a reader who does not want the notation can read the theorem statements and those sentences alone.
 
 \keepwithtable
 
@@ -205,11 +210,11 @@ The sandwich around Question 1, Sections 5 and 8, drawn:
 \mathrm{NP} \subseteq \mathrm{BPP} \;\Rightarrow\; \mathrm{BEM} \;\Rightarrow\; \text{no io-OWF} & (same-time defect; Theorem 3) \\
 \mathrm{DistNP} \subseteq \mathrm{AvgBPP} \;\Rightarrow\; \mathrm{H}_{\mathrm{pK}} \;\Rightarrow\; \mathrm{BEM}_{\mathrm{skew}} \;\Rightarrow\; \text{no io-OWF} & (time-skewed defect; Propositions 7 and 8) \\
 \text{(i)} \;\Rightarrow\; \mathrm{BEM}_{\mathrm{skew}} & (a second top; Proposition 13) \\[2pt]
-\text{open: does no io-OWF force BEM?} & barriers on record: Propositions 9 and 10
+\text{open: does no io-OWF force BEM?} & barrier on record: Proposition 10 (conditional); Proposition 9 is the barrier for the top of the skewed sandwich
 \end{array}
 \]
 
-\emph{Plain reading: the first row is the paper's theorem; the second and third are the lowered tops for the skewed object, two different hypotheses that each force the moment bound; the last line is the question the paper leaves open, with the two propositions that say which proof methods cannot answer it.}
+\emph{In words: the first row is the paper's theorem; the second and third are the lowered tops for the skewed object, two different hypotheses that each force the moment bound; the last line is the question the paper leaves open, with the proposition that says which proof methods cannot answer it, and the one that says the same of the skewed sandwich's top.}
 
 Where the paper is explicit about its own limits: Section 1.1 (what the results are not), the Conventions below (\S{}1.3), and Section 9.5 (what is attributed to whom).
 
@@ -218,7 +223,7 @@ Where the paper is explicit about its own limits: Section 1.1 (what the results 
 
 \textbf{Informal.} One statement, Proposition 11, is a reading of the sources offered without a proof and is marked ``(informal)''; every other theorem, lemma, proposition and corollary is followed by its proof or by an exact pointer to a read source, and a statement proved from a named hypothesis, or from a source result as read, carries that hypothesis in its head. Claims in the prose that are expected but not proved say so in words; one paragraph of \S{}8.1 is a speculation and says so.
 
-\textbf{Plain readings.} Every displayed formula is followed by an italic sentence beginning \emph{Plain reading}, saying what the formula means in words.
+\textbf{In words.} Every displayed formula is followed by an italic sentence beginning \emph{In words}, saying what the formula means.
 
 \textbf{Numbering.} Theorems 1 to 4 are the paper's theorems; Theorem 0 is a known theorem restated for comparison; definitions, lemmas, propositions, corollaries and remarks are each numbered in order of appearance across the whole paper.
 
@@ -239,11 +244,11 @@ Fix a universal machine $U$. For a time bound $t$, a string $x$ of length $n$, a
 \mathrm{pK}^t(x) = \min\bigl\{\, k : \Pr_{r \sim \{0,1\}^{t(n)}} \bigl[\, \text{some } p \in \{0,1\}^k \text{ has } U(p, r) = x \text{ within } t(n) \text{ steps} \,\bigr] \ge 2/3 \,\bigr\}.
 \]
 
-\emph{Plain reading: the fewest bits $k$ such that, for at least two thirds of the random strings $r$, some $k$-bit program handed $r$ prints $x$ within time $t$: time-bounded description length when everyone shares a random string.}
+\emph{In words: the fewest bits $k$ such that, for at least two thirds of the random strings $r$, some $k$-bit program handed $r$ prints $x$ within time $t$: time-bounded description length when everyone shares a random string.}
 
 \end{definitionx}
 
-The conditional version $\mathrm{pK}^t(x \mid y)$ gives $U$ the string $y$ on a further tape [HILNO p. 17]. Let $d$ be a constant with $\mathrm{pK}^t(x) \le |x| + d$ and $\mathrm{pK}^t(x \mid y) \le |x| + d$ for every $x$, $y$ and $t \ge |x|$: the program prints $x$ literally and ignores $y$.
+The conditional version $\mathrm{pK}^t(x \mid y)$ gives $U$ the string $y$ on a further tape [HILNO p. 17]. $K^t(x)$ and $K^t(x \mid y)$ are the deterministic time-bounded description lengths, Definition 1 with no random string and the program required to print $x$ outright; they appear in cited hypotheses (\S{}2.1(iii), \S{}8.5, \S{}8.6, \S{}9.2) and in no proof of this paper. Let $d$ be a constant with $\mathrm{pK}^t(x) \le |x| + d$ and $\mathrm{pK}^t(x \mid y) \le |x| + d$ for every $x$, $y$ and $t \ge |x|$: the program prints $x$ literally and ignores $y$.
 
 Three conventions. (i) The universal machine $U$ prints the empty string on the empty program, so $\mathrm{pK}^t(x) \ge 1$ and $\mathrm{pK}^t(x \mid y) \ge 1$ for every non-empty $x$; this normalisation of $U$, implicit in the counting arguments of [LOZ, Lemma 36] and [HILNO, Proposition 22], is what makes the constants of Section 3 exact as printed. (ii) $\mathrm{pK}^t$ of a pair means $\mathrm{pK}^t$ of a fixed pairing $\langle x, y\rangle$ of two $n$-bit strings, with the time bound read as a number ($t(2n)$ when $t$ is given as a function). (iii) GKLO22's Definition 17, a RAM machine $M(w, y)$, and Kabanets and Kolokolova's formulation, $K^t(x \mid y, r) \le s$ for two thirds of the random strings $r$, differ from Definition 1 by $O(1)$ bits and a polynomial change of $t$, by mutual simulation [GKLO22, footnote 18; the $O(1)$-bit, polynomial-time quantification is this paper's and is not proved there]; every use of their results below survives that change, and the polynomials $p$, $P$ and the $O(\log s)$ slack absorb it.
 
@@ -266,7 +271,7 @@ For each samplable $D$ fix a polynomial $t_D = \mathrm{poly}(T(n))$ large enough
 \Pr_{z \sim \{0,1\}^n} \bigl[\, A(f(z)) \in f^{-1}(f(z)) \,\bigr] < 1 / q(n).
 \]
 
-\emph{Plain reading: no fast algorithm finds a preimage with better than one-in-polynomial chance, for infinitely many input lengths.}
+\emph{In words: no fast algorithm finds a preimage with better than one-in-polynomial chance, for infinitely many input lengths.}
 
 \end{definitionx}
 
@@ -275,7 +280,7 @@ For each samplable $D$ fix a polynomial $t_D = \mathrm{poly}(T(n))$ large enough
 \text{io-OWF exist} \;\;\Rightarrow\;\; \mathrm{NP} \not\subseteq \mathrm{BPP} \;\;\Rightarrow\;\; \mathrm{P} \ne \mathrm{NP},
 \]
 
-\emph{Plain reading: if a one-way function exists then no fast randomized algorithm solves $\mathrm{NP}$ and so $\mathrm{P} \ne \mathrm{NP}$, and neither arrow is known to reverse, since $\mathrm{P} \ne \mathrm{NP}$ may hold with $\mathrm{NP}$ hard only in the worst case (Heuristica) or hard on average with no one-way function (Pessiland), which of the five worlds holds being open.} The first arrow is the observation that if $\mathrm{NP} \subseteq \mathrm{BPP}$ then every polynomial-time function is invertible in probabilistic polynomial time by search-to-decision; the second is $\mathrm{BPP} \supseteq \mathrm{P}$. Nothing in this paper touches the converse of either arrow.
+\emph{In words: if a one-way function exists then no fast randomized algorithm solves $\mathrm{NP}$ and so $\mathrm{P} \ne \mathrm{NP}$, and neither arrow is known to reverse, since $\mathrm{P} \ne \mathrm{NP}$ may hold with $\mathrm{NP}$ hard only in the worst case (Heuristica) or hard on average with no one-way function (Pessiland), which of the five worlds holds being open.} The first arrow is the observation that if $\mathrm{NP} \subseteq \mathrm{BPP}$ then every polynomial-time function is invertible in probabilistic polynomial time by search-to-decision; the second is $\mathrm{BPP} \supseteq \mathrm{P}$. Nothing in this paper touches the converse of either arrow.
 
 So ``io-OWFs do not exist'' means: every polynomial-time computable $f$ is inverted, with probability at least $1/q(n)$ for some polynomial $q$ and some fast A, for all large $n$. That is the convention of HILNO's Theorem 1, item 1, and it is kept throughout.
 
@@ -289,7 +294,7 @@ The forward process is the sampler. There is no canonical way to run a sampler b
 m_R(x, y) := 2^{-\mathrm{pK}^t(y) - \mathrm{pK}^t(x \mid y)}, \qquad m_F(x, y) := 2^{-\mathrm{pK}^t(x) - \mathrm{pK}^t(y \mid x)}.
 \]
 
-\emph{Plain reading: $m_R$ is the weight a bounded observer's universal fast prior gives to producing $y$ first and then recovering $x$ from $y$; $m_F$ is the same weight with the roles of $x$ and $y$ swapped.}
+\emph{In words: $m_R$ is the weight a bounded observer's universal fast prior gives to producing $y$ first and then recovering $x$ from $y$; $m_F$ is the same weight with the roles of $x$ and $y$ swapped.}
 
 \end{definitionx}
 
@@ -306,7 +311,7 @@ $m_R$ is the reverse process. $m_F$ is used from Section 5 on.
 \end{aligned}
 \]
 
-\emph{Plain reading: how many more bits the bounded observer's reverse description of the pair needs than the sampler's own probabilities say it should, the first bracket being the excess for recovering $x$ from $y$ and the second the excess for describing $y$, so that a positive value means the observer cannot reverse the pair as well as the process produced it.}
+\emph{In words: how many more bits the bounded observer's reverse description of the pair needs than the sampler's own probabilities say it should, the first bracket being the excess for recovering $x$ from $y$ and the second the excess for describing $y$, so that a positive value means the observer cannot reverse the pair as well as the process produced it.}
 
 \end{definitionx}
 
@@ -319,7 +324,7 @@ The quantity is one-sided: the forward side is the real process and the backward
 \Pr_{(x,y) \sim D} \bigl[\, \sigma^{\mathrm{rev}}_D(x, y) = s \,\bigr] = 2^s \cdot \sum_{(x,y) \in \operatorname{supp} D \,:\, \sigma^{\mathrm{rev}}_D(x,y) = s} m_R(x, y).
 \]
 
-\emph{Plain reading: the chance that the forward process shows production $s$ equals $2^s$ times the reverse weight of the pairs showing production $s$.}
+\emph{In words: the chance that the forward process shows production $s$ equals $2^s$ times the reverse weight of the pairs showing production $s$.}
 
 \end{lemmax}
 
@@ -335,7 +340,7 @@ For the reader who wants the frame. Crooks [1999] writes, for a finite classical
 \rho_F(x_{-\tau})\, P[x(+t) \mid \lambda(+t)] \;/\; \bigl( \rho_R(x_{+\tau})\, P[x(-t) \mid \lambda(-t)] \bigr) = e^{+\omega_F},
 \]
 
-\emph{Plain reading: the entropy production $\omega$ of a path is exactly the log of the forward path probability, started from the forward initial density, over the reversed path probability, started from the reverse initial density.}
+\emph{In words: the entropy production $\omega$ of a path is exactly the log of the forward path probability, started from the forward initial density, over the reversed path probability, started from the reverse initial density.}
 
 and from it, in two lines, the detailed fluctuation theorem eq. (2), $P_F(+\omega) / P_R(-\omega) = e^{\omega}$, and the integral fluctuation theorem eq. (4), $\langle e^{-\omega}\rangle$ = 1. Discrete, exactly reversible microdynamics with thermodynamic behaviour exist in print: Takesue's elementary reversible cellular automata [Takesue 1987; Takesue 1989], whose relaxation to equilibrium is reported in [Takesue 1990].
 
@@ -376,7 +381,7 @@ The physics column is a parallel. Nothing in the computational column depends on
 n^{-2c_0} \le \mathrm{E}_{(x,y) \sim D} \bigl[\, 2^{-\sigma(x,y)} \,\bigr] \le (3/2)^2 (n + d)^2,
 \]
 
-\emph{Plain reading: the exponential average of minus the entropy production, which is the total reverse weight of the sampler's support, is at most about $n$ squared and at least one over a polynomial that depends on the sampler.}
+\emph{In words: the exponential average of minus the entropy production, which is the total reverse weight of the sampler's support, is at most about $n$ squared and at least one over a polynomial that depends on the sampler.}
 
 where $c_0$ is a constant depending only on the sampler's code and on $U$. The upper bound, and with it (b) and (c), hold for every distribution on pairs, samplable or not.
 
@@ -385,14 +390,14 @@ where $c_0$ is a constant depending only on the sampler's code and on $U$. The u
 \mathrm{E}_{(x,y) \sim D} \bigl[\, \sigma(x,y) \,\bigr] \ge -2 \log \bigl( 3(n + d)/2 \bigr).
 \]
 
-\emph{Plain reading: on average the bounded observer's reverse description is not cheaper than the sampler's probabilities allow, up to about 2 $\log n$ bits.}
+\emph{In words: on average the bounded observer's reverse description is not cheaper than the sampler's probabilities allow, up to about 2 $\log n$ bits.}
 
 (c) \emph{Tail.} For every $\alpha \ge 0$,
 \[
 \Pr_{(x,y) \sim D} \bigl[\, \sigma(x,y) < -\alpha - 2 \log \bigl( 3(n + d)/2 \bigr) \,\bigr] \le 2^{-\alpha}.
 \]
 
-\emph{Plain reading: it is exponentially rare for the reverse description to be cheaper than the forward probabilities allow by $\alpha$ more bits.}
+\emph{In words: it is exponentially rare for the reverse description to be cheaper than the forward probabilities allow by $\alpha$ more bits.}
 
 \end{theoremx}
 
@@ -406,7 +411,7 @@ The proof uses the seven lemmas of \S{}3.2 and is given in \S{}3.3.
 \sum_{x \in \{0,1\}^n} 2^{-\mathrm{pK}^t(x)} \le (3/2)(n + d).
 \]
 
-\emph{Plain reading: short fast descriptions are scarce; the weights two-to-the-minus-length add up to at most about $n$.}
+\emph{In words: short fast descriptions are scarce; the weights two-to-the-minus-length add up to at most about $n$.}
 
 \end{lemmax}
 
@@ -417,7 +422,7 @@ The proof uses the seven lemmas of \S{}3.2 and is given in \S{}3.3.
 \sum_{x \in \{0,1\}^n} 2^{-\mathrm{pK}^t(x \mid y)} \le (3/2)(n + d).
 \]
 
-\emph{Plain reading: the same scarcity holds for fast descriptions of $x$ that may look at $y$.}
+\emph{In words: the same scarcity holds for fast descriptions of $x$ that may look at $y$.}
 
 \end{lemmax}
 
@@ -436,7 +441,7 @@ The proof uses the seven lemmas of \S{}3.2 and is given in \S{}3.3.
 \mathrm{pK}^t(x) \le \log 1/D_1(x) + c_D \log n,
 \]
 
-\emph{Plain reading: whatever the sampler produces with probability $\delta$ has a fast description of about $\log 1/\delta$ bits.}
+\emph{In words: whatever the sampler produces with probability $\delta$ has a fast description of about $\log 1/\delta$ bits.}
 
 and the same for $D_2$.
 
@@ -449,7 +454,7 @@ and the same for $D_2$.
 \mathrm{pK}^{p(t)}(x \mid y) \le \log 1/S(x \mid y) + O(\log t).
 \]
 
-\emph{Plain reading: if a fast program, shown $y$, lands on $x$ with odds one in $2^k$, then $x$ has a fast description of about $k$ bits plus a few times log $t$ given $y$, with a constant that, as in Lemma 5, depends only on the code of the program.}
+\emph{In words: if a fast program, shown $y$, lands on $x$ with odds one in $2^k$, then $x$ has a fast description of about $k$ bits plus a few times log $t$ given $y$, with a constant that, as in Lemma 5, depends only on the code of the program.}
 
 \end{lemmax}
 
@@ -462,7 +467,7 @@ The decoder is the one in LOZ's proof of Theorem 30 [Lu, Oliveira and Zimand 202
 \Pr_{x \sim D(\cdot \mid y)} \bigl[\, \mathrm{pK}^t(x \mid y) < \log 1/D(x \mid y) - \alpha - \log(3(n + d)/2) \,\bigr] \le 2^{-\alpha},
 \]
 
-\emph{Plain reading: a sampled $x$ is almost never much cheaper to describe from $y$ than its conditional probability warrants.}
+\emph{In words: a sampled $x$ is almost never much cheaper to describe from $y$ than its conditional probability warrants.}
 
 and likewise, with Lemma 2 in place of Lemma 3, $\Pr_{y \sim D_2}[\, \mathrm{pK}^t(y) < \log 1/D_2(y) - \alpha - \log(3(n + d)/2) \,] \le 2^{-\alpha}$.
 
@@ -480,7 +485,7 @@ This is [HILNO, Lemma 9] with Lemma 3 in place of Kraft's inequality for unbound
 \end{gathered}
 \]
 
-\emph{Plain reading: the weight the reverse process puts on the output $y$ is at least the forward process's own probability of $y$ divided by a polynomial, and it exceeds that probability by more than a polynomial only on an exponentially rare set of outputs.}
+\emph{In words: the weight the reverse process puts on the output $y$ is at least the forward process's own probability of $y$ divided by a polynomial, and it exceeds that probability by more than a polynomial only on an exponentially rare set of outputs.}
 
 \end{lemmax}
 
@@ -498,7 +503,7 @@ Physics parallel. Crooks's derivation of eq. (2) from eq. (7) needs the reverse 
 \mathrm{E}_D \bigl[\, 2^{-\sigma} \,\bigr] = \sum_{(x,y) \in \operatorname{supp} D} m_R(x, y) \le \sum_y 2^{-\mathrm{pK}^t(y)} \sum_x 2^{-\mathrm{pK}^t(x \mid y)} \le (3/2)^2 (n + d)^2
 \]
 
-\emph{Plain reading: the exponential average is the reverse weight of the support; enlarging the sum to all pairs and applying the two Kraft lemmas bounds it by about $n$ squared.}
+\emph{In words: the exponential average is the reverse weight of the support; enlarging the sum to all pairs and applying the two Kraft lemmas bounds it by about $n$ squared.}
 
 by Lemma 2 and Lemma 3. No property of $D$ beyond being a distribution was used.
 
@@ -524,14 +529,14 @@ by Lemma 2 and Lemma 3. No property of $D$ beyond being a distribution was used.
 K(x, y) = K(y) + K(x \mid y) \pm O(\log n) = K(x) + K(y \mid x) \pm O(\log n),
 \]
 
-\emph{Plain reading: with unlimited time, describing the pair costs the same as describing either string and then the other from it, in either order, up to a few log bits.}
+\emph{In words: with unlimited time, describing the pair costs the same as describing either string and then the other from it, in either order, up to a few log bits.}
 
 and consequently
 \[
 K(x \mid y) - K(y \mid x) = K(x) - K(y) \pm O(\log n).
 \]
 
-\emph{Plain reading: with unlimited time, the extra cost of going from $y$ to $x$ rather than from $x$ to $y$ depends only on how complex $x$ and $y$ are individually.}
+\emph{In words: with unlimited time, the extra cost of going from $y$ to $x$ rather than from $x$ to $y$ depends only on how complex $x$ and $y$ are individually.}
 
 \end{theoremx}
 
@@ -553,7 +558,7 @@ Theorem 1 used both directions of the \emph{marginal} coding theorem, Lemma 8, a
 \Pr_{(x,y) \sim D} \bigl[\, \mathrm{pK}^{p(n)}(x \mid y) \le \log 1/D(x \mid y) + \log p(n) \,\bigr] \ge 1 - 1/q(n).
 \]
 
-\emph{Plain reading: for almost every sampled pair, $x$ can be described from $y$, fast, in about as many bits as the conditional probability of $x$ given $y$ warrants.}
+\emph{In words: for almost every sampled pair, $x$ can be described from $y$, fast, in about as many bits as the conditional probability of $x$ given $y$ warrants.}
 
 \end{propositionx}
 
@@ -575,7 +580,7 @@ Physics parallel. Crooks's eq. (5), microscopic reversibility, $P[x(+t) \mid \la
 \mathrm{E}_{(x,y) \sim D} \bigl[\, \sigma^{\mathrm{rev}}_D(x, y) \,\bigr] \le C \log n.
 \]
 
-\emph{Plain reading: every efficiently samplable process has, up to about $\log n$ bits, zero mean computational entropy production.}
+\emph{In words: every efficiently samplable process has, up to about $\log n$ bits, zero mean computational entropy production.}
 
 Equivalently: io-OWFs exist if and only if there is a polynomial-time samplable $D$ such that for every polynomial $p$ and every constant $c$, at $t = p(n)$, the mean production $\mathrm{E}_D[\sigma^{\mathrm{rev}}_D]$ exceeds $c \log n$ for infinitely many $n$.
 
@@ -588,7 +593,7 @@ The proof, both directions from HILNO's ingredients, follows Lemma 9. \textbf{No
 \Pr_{z} \bigl[\, \mathrm{pK}^t( z \mid f(z) ) \le \log |f^{-1}(f(z))| + c \log n \,\bigr] < 1/q(n).
 \]
 
-\emph{Plain reading: for a one-way function, a random input almost never has a fast description from its output that is within $c \log n$ bits of the counting bound, for infinitely many input lengths.}
+\emph{In words: for a one-way function, a random input almost never has a fast description from its output that is within $c \log n$ bits of the counting bound, for infinitely many input lengths.}
 
 \end{lemmax}
 
@@ -601,7 +606,7 @@ On the good set, of probability at least $1 - 1/n^2$: $B_1 \le \log p_0(n)$ by L
 \mathrm{E}_D \bigl[\, \sigma^{\mathrm{rev}}_D \,\bigr] \le \log p_0(n) + c_D \log n + (2n + 2d) / n^2 \le C \log n
 \]
 
-\emph{Plain reading: the mean production is at most the log-$p$ slack on almost all pairs plus a vanishing contribution from the rare bad pairs.}
+\emph{In words: the mean production is at most the log-$p$ slack on almost all pairs plus a vanishing contribution from the rare bad pairs.}
 
 for a constant $C$ and all large $n$.\qed
 
@@ -616,7 +621,7 @@ Positive part. Apply Lemma 9 with $q(n) = n$ and the constant $c$ to be fixed: f
 \mathrm{E}_D \bigl[\, \sigma^{\mathrm{rev}}_D \,\bigr] \ge c \log n \cdot (1 - 1/n) - 2 (L + 2) \ge (c - 3) \log n - 2 \log 3 - 4 - c \log n / n.
 \]
 
-\emph{Plain reading: the mean production is at least $c \log n$ from the positive part on almost all inputs, minus at most 2 $\log n$ plus a constant from the negative parts.}
+\emph{In words: the mean production is at least $c \log n$ from the positive part on almost all inputs, minus at most 2 $\log n$ plus a constant from the negative parts.}
 
 Choose $c = C + 4$. Then for infinitely many $n$, $\mathrm{E}_D[\sigma^{\mathrm{rev}}_D] > C \log n$, so (2) fails for $D$ with this $p$ and $C$. Since $p$ and $C$ were arbitrary, (2) fails.\qed
 
@@ -637,7 +642,7 @@ Theorem 1 exponentiated the one-sided production $\sigma^{\mathrm{rev}}_D$, whos
 \sigma_t(x, y) := \log m_F(x, y) - \log m_R(x, y) = \bigl[\, \mathrm{pK}^t(y) + \mathrm{pK}^t(x \mid y) \,\bigr] - \bigl[\, \mathrm{pK}^t(x) + \mathrm{pK}^t(y \mid x) \,\bigr].
 \]
 
-\emph{Plain reading: how many more bits the bounded observer pays to describe the pair as ``$y$ first, then $x$ from $y$'' than as ``$x$ first, then $y$ from $x$'', both within the same time $t$, so that positive means the reverse order is the dearer one.}
+\emph{In words: how many more bits the bounded observer pays to describe the pair as ``$y$ first, then $x$ from $y$'' than as ``$x$ first, then $y$ from $x$'', both within the same time $t$, so that positive means the reverse order is the dearer one.}
 
 \end{definitionx}
 
@@ -655,7 +660,7 @@ Theorem 1 exponentiated the one-sided production $\sigma^{\mathrm{rev}}_D$, whos
 \end{aligned}
 \]
 
-\emph{Plain reading: first line, the defect is ``what $x$ tells the observer about $y$'' minus ``what $y$ tells the observer about $x$'' at time $t$, vanishing exactly when time-bounded mutual information is symmetric; second line, it is the time-$t$ cost of going from $y$ to $x$ rather than from $x$ to $y$, minus what symmetry of information (Theorem 0) would assign to that difference, the difference of the two individual costs, which is the sense in which $\sigma_t$ is Zurek's cost at a time bound minus its unbounded value.}
+\emph{In words: first line, the defect is ``what $x$ tells the observer about $y$'' minus ``what $y$ tells the observer about $x$'' at time $t$, vanishing exactly when time-bounded mutual information is symmetric; second line, it is the time-$t$ cost of going from $y$ to $x$ rather than from $x$ to $y$, minus what symmetry of information (Theorem 0) would assign to that difference, the difference of the two individual costs, which is the sense in which $\sigma_t$ is Zurek's cost at a time bound minus its unbounded value.}
 
 \end{lemmax}
 
@@ -666,7 +671,7 @@ Theorem 1 exponentiated the one-sided production $\sigma^{\mathrm{rev}}_D$, whos
 \mathrm{pK}^{ct}(x, y) \le \mathrm{pK}^t(x) + \mathrm{pK}^t(y \mid x) + O(\log t), \qquad \mathrm{pK}^{ct}(x, y) \le \mathrm{pK}^t(y) + \mathrm{pK}^t(x \mid y) + O(\log t).
 \]
 
-\emph{Plain reading: describing $x$ within time $t$ and then $y$ from $x$ within time $t$ describes the pair within a constant multiple of $t$, for $O(\log t)$ extra bits; and the same in the other order.}
+\emph{In words: describing $x$ within time $t$ and then $y$ from $x$ within time $t$ describes the pair within a constant multiple of $t$, for $O(\log t)$ extra bits; and the same in the other order.}
 
 \end{lemmax}
 
@@ -677,7 +682,7 @@ Theorem 1 exponentiated the one-sided production $\sigma^{\mathrm{rev}}_D$, whos
 \sigma_t(x, y) = e_R(x, y) - e_F(x, y), \qquad e_R(x, y) \ge -O(\log t), \qquad e_F(x, y) \ge -O(\log t).
 \]
 
-\emph{Plain reading: $e_R$ and $e_F$ say how much the two-step description, in its order, overshoots the best fast description of the pair as a whole; Lemma 11 says neither undershoots by more than a few log bits; and the defect is the overshoot in the reverse order minus the overshoot in the forward order.}
+\emph{In words: $e_R$ and $e_F$ say how much the two-step description, in its order, overshoots the best fast description of the pair as a whole; Lemma 11 says neither undershoots by more than a few log bits; and the defect is the overshoot in the reverse order minus the overshoot in the forward order.}
 
 \end{remarkx}
 
@@ -688,7 +693,7 @@ Symmetry of information for $\mathrm{pK}^t$, in the forms the literature studies
 \mathrm{E}_{(x,y) \sim D} \bigl[\, 2^{-\sigma_t(x,y)} \,\bigr] \le n^C \qquad \text{and} \qquad \mathrm{E}_{(x,y) \sim D} \bigl[\, 2^{+\sigma_t(x,y)} \,\bigr] \le n^C.
 \]
 
-\emph{Plain reading: averaged over the sampler's pairs, two to the defect and two to minus the defect are both at most a polynomial, once the time budget is a large enough polynomial.}
+\emph{In words: averaged over the sampler's pairs, two to the defect and two to minus the defect are both at most a polynomial, once the time budget is a large enough polynomial.}
 
 \end{definitionx}
 
@@ -704,18 +709,18 @@ Symmetry of information for $\mathrm{pK}^t$, in the forms the literature studies
 \mathrm{E}_{D} \bigl[\, 2^{+\sigma_t} \,\bigr] \ge n^a \qquad \text{and} \qquad \mathrm{E}_{D'} \bigl[\, 2^{-\sigma_t} \,\bigr] \ge n^a.
 \]
 
-\emph{Plain reading: with a one-way function, the defect is hugely positive on the forward-oriented pairs and hugely negative on the swapped pairs, so neither exponential average stays under any polynomial; $D$ and $D'$ fail Definition 7, and $\mathrm{BEM}$ is false.}
+\emph{In words: with a one-way function, the defect is hugely positive on the forward-oriented pairs and hugely negative on the swapped pairs, so neither exponential average stays under any polynomial; $D$ and $D'$ fail Definition 7, and $\mathrm{BEM}$ is false.}
 
 (b) If $\mathrm{NP} \subseteq \mathrm{BPP}$ then $\mathrm{BEM}$ holds.
 
-\emph{Plain reading: if $\mathrm{NP}$ is easy, every fast process has polynomially bounded exponential averages of the defect in both directions.}
+\emph{In words: if $\mathrm{NP}$ is easy, every fast process has polynomially bounded exponential averages of the defect in both directions.}
 
 (c) Consequently
 \[
 \mathrm{NP} \subseteq \mathrm{BPP} \;\;\Rightarrow\;\; \mathrm{BEM} \;\;\Rightarrow\;\; \text{no io-OWF}.
 \]
 
-\emph{Plain reading: bounded exponential moments sit between ``$\mathrm{NP}$ is easy'' and ``no one-way functions'', and whether either arrow reverses is not decided here, the second one being the paper's open problem, Section 8.}
+\emph{In words: bounded exponential moments sit between ``$\mathrm{NP}$ is easy'' and ``no one-way functions'', and whether either arrow reverses is not decided here, the second one being the paper's open problem, Section 8.}
 
 \end{theoremx}
 
@@ -728,7 +733,7 @@ Forward side. Since $D(f(z) \mid z)$ = 1 and $D_1(z) = 2^{-n}$,
 \sigma^{\mathrm{fwd}}_D(z, f(z)) = \mathrm{pK}^t(f(z) \mid z) + \mathrm{pK}^t(z) - n \le c_f \log n + d,
 \]
 
-\emph{Plain reading: describing the input literally and then computing the function costs at most the input length plus a few log bits, so the forward-order production is at most a few log bits.}
+\emph{In words: describing the input literally and then computing the function costs at most the input length plus a few log bits, so the forward-order production is at most a few log bits.}
 
 because the program ``compute $f$ on the string on the extra tape'' has length $c_f \log n$ for a constant $c_f$ depending on $f$ and $U$, runs within $t_D \le t$ steps, and $\mathrm{pK}^t(z) \le n + d$.
 
@@ -737,7 +742,7 @@ Reverse side. Write $\sigma^{\mathrm{rev}}_D = B_1 + B_2$ as in the proof of The
 \sigma_t(z, f(z)) \ge c \log n - (\log n + 4) - (c_f \log n + d) = (a + 1) \log n - d - 4.
 \]
 
-\emph{Plain reading: on at least half of the inputs the defect is about a plus one times $\log n$, for the constant a we chose.}
+\emph{In words: on at least half of the inputs the defect is about a plus one times $\log n$, for the constant a we chose.}
 
 Hence $\mathrm{E}_D[2^{+\sigma_t}] \ge (1/2) \cdot n^{a+1} \cdot 2^{-d-4} \ge n^a$ for all large $n$ among those infinitely many. For $D'$: the sampler outputs $(f(z), z)$, and $\sigma_t(f(z), z) = -\sigma_t(z, f(z))$ by Lemma 10(ii), so $\mathrm{E}_{D'}[2^{-\sigma_t}] = \mathrm{E}_D[2^{+\sigma_t}]$. Since $t \ge t_D$ was any polynomial, $D'$ is sampled by $D$'s sampler with its outputs exchanged, and a was arbitrary, both $D$ and $D'$ fail Definition 7 for every choice of $p_D$ and $C$.
 
@@ -746,14 +751,14 @@ Hence $\mathrm{E}_D[2^{+\sigma_t}] \ge (1/2) \cdot n^{a+1} \cdot 2^{-d-4} \ge n^
 m_F(x, y) \ge D(x, y) / \bigl( p_D(n)\, n^{c_D} \bigr) \qquad \text{and} \qquad m_R(x, y) \ge D(x, y) / \bigl( p_D(n)\, n^{c_D} \bigr) \qquad \text{on } \operatorname{supp} D.
 \]
 
-\emph{Plain reading: if $\mathrm{NP}$ is easy, both fast descriptions of a sampled pair weigh at least the pair's own probability divided by a polynomial.}
+\emph{In words: if $\mathrm{NP}$ is easy, both fast descriptions of a sampled pair weigh at least the pair's own probability divided by a polynomial.}
 
 Therefore
 \[
 \mathrm{E}_D \bigl[\, 2^{-\sigma_t} \,\bigr] = \sum_{\operatorname{supp} D} D \cdot m_R / m_F \le p_D(n)\, n^{c_D} \sum_{\operatorname{supp} D} m_R \le p_D(n)\, n^{c_D}\, (3/2)^2 (n + d)^2,
 \]
 
-\emph{Plain reading: two to minus the defect is the reverse weight over the forward weight; the forward weight is at least the pair's probability over a polynomial, and the reverse weights of the support add up to at most about $n$ squared.}
+\emph{In words: two to minus the defect is the reverse weight over the forward weight; the forward weight is at least the pair's probability over a polynomial, and the reverse weights of the support add up to at most about $n$ squared.}
 
 by the display in the proof of Theorem 1(a); and $\mathrm{E}_D[2^{+\sigma_t}] = \sum D \cdot m_F / m_R \le \allowbreak p_D(n) n^{c_D} \sum_{\operatorname{supp} D} m_F$, which is bounded the same way by Lemma 2 and Lemma 3 with the roles of $x$ and $y$ exchanged. Both moments are $n^{O(1)}$ for all $t \ge p_D(n)$ and all large $n$.
 
@@ -775,7 +780,7 @@ The words \emph{lost} and \emph{hidden}, used as defined terms below, are define
 \sigma^{\mathrm{rev}}_D(x, y) \le O(\log n),
 \]
 
-\emph{Plain reading: if some fast program can run the process backward, drawing a start from any given end with at least a fixed fraction of the right odds, then every pair, not only most pairs, is reversed about as cheaply as it was produced: the process has no computational arrow.}
+\emph{In words: if some fast program can run the process backward, drawing a start from any given end with at least a fixed fraction of the right odds, then every pair, not only most pairs, is reversed about as cheaply as it was produced: the process has no computational arrow.}
 
 and consequently $\mathrm{E}_D[\sigma^{\mathrm{rev}}_D] \le O(\log n)$ and $\mathrm{E}_D[2^{\sigma^{\mathrm{rev}}_D}] \le n^{O(1)}$.
 
@@ -785,7 +790,7 @@ and consequently $\mathrm{E}_D[\sigma^{\mathrm{rev}}_D] \le O(\log n)$ and $\mat
 
 The marginal term: Lemma 5 gives $\mathrm{pK}^t(y) \le \log 1/D_2(y) + c_D \log n$ for every $y \in \operatorname{supp} D_2$. The conditional term: $R(y)$ is a randomized algorithm running in time $T_R(n)$ that outputs $x$ with probability at least $D(x \mid y)/K$; Lemma 6 applied to it gives $\mathrm{pK}^{p(T_R(n))}(x \mid y) \le \log 1/D(x \mid y) + \log K + O(\log n)$ for every $x$ with $(x, y) \in \operatorname{supp} D$, and by Lemma 4 the bound holds at every $t \ge p_R(n) := p(T_R(n))$, the polynomial Lemma 6 assigns to $R$. Summing the two bounds, Definition 5 gives $\sigma^{\mathrm{rev}}_D(x, y) \le O(\log n)$ on every support pair, and the moment bounds follow: the mean by averaging, and $\mathrm{E}_D[2^{\sigma^{\mathrm{rev}}_D}] \le 2^{O(\log n)} = n^{O(1)}$.\qed
 
-\emph{Plain reading: the second half of $\sigma$ is small for every process by Lemma 5, and the first half is small because the backward program is a real fast program, and a real fast program that lands on $x$ with probability $\delta$ hands $x$ a fast description of about $\log 1/\delta$ bits, which is the coding theorem, allowed by Lemma 6 to take the end state as a free extra input.}
+\emph{In words: the second half of $\sigma$ is small for every process by Lemma 5, and the first half is small because the backward program is a real fast program, and a real fast program that lands on $x$ with probability $\delta$ hands $x$ a fast description of about $\log 1/\delta$ bits, which is the coding theorem, allowed by Lemma 6 to take the end state as a free extra input.}
 
 \begin{corollaryx}{1}[{dissipation lives only where the reverse is hard}] If $D$ dissipates in the sense of Theorem 2, that is, for every polynomial $p$ and every constant $C$ the mean production $\mathrm{E}_D[\sigma^{\mathrm{rev}}_D]$ at $t = p(n)$ exceeds $C \log n$ for infinitely many $n$, then no polynomial-time randomized $R$ dominates $D(\cdot \mid y)$ within a constant factor on every $y \in \operatorname{supp} D_2$, and in particular none samples it exactly. Dissipation in this paper's sense lives only where the reverse process is computationally hard; Corollary 2 below sharpens ``on every end'' to ``on all but a $1/n$ slice of ends'' and ``within a constant'' to ``within any polynomial''.
 
@@ -793,14 +798,14 @@ The marginal term: Lemma 5 gives $\mathrm{pK}^t(y) \le \log 1/D_2(y) + c_D \log 
 
 \textbf{Proof.} The contrapositive of Proposition 2.\qed
 
-\emph{Plain reading: a process shows a computational arrow only if no fast program can run it backward with even a fixed fraction of the right odds, so where the backward run is easy the arrow is gone.}
+\emph{In words: a process shows a computational arrow only if no fast program can run it backward with even a fixed fraction of the right odds, so where the backward run is easy the arrow is gone.}
 
 \begin{propositionx}{3}[{Markov chains with polynomially many states do not dissipate}] Let $S$ be a state space with $|S| \le n^{O(1)}$, $P$ a transition matrix on $S$ and $\pi_0$ a start distribution, every entry a dyadic rational with at most $n^{O(1)}$ bits, and $L \le n^{O(1)}$. Let $D$ be the pair distribution with $x$ the trajectory $(s_0, \dots, s_L)$ drawn from $\pi_0$ and $P$ and $y$ its endpoint $s_L$, both encoded as $n$-bit strings for an $n$ large enough to hold them. Then $D$ is polynomial-time samplable, some polynomial-time $R$ dominates $D(\cdot \mid y)$ within the constant 2 on every $y \in \operatorname{supp} D_2$, and hence, by Proposition 2, for every $t \ge t_D + p_R(n)$, $p_R$ the polynomial of Proposition 2 for this $R$,
 \[
 \sigma^{\mathrm{rev}}_D(x, y) \le O(\log n) \qquad \text{for every } (x, y) \in \operatorname{supp} D,
 \]
 
-\emph{Plain reading: a model system of stochastic thermodynamics with polynomially many states has no computational arrow, whether or not it breaks detailed balance: the backward chain is computable, and computing it is all the bounded observer needs.}
+\emph{In words: a model system of stochastic thermodynamics with polynomially many states has no computational arrow, whether or not it breaks detailed balance: the backward chain is computable, and computing it is all the bounded observer needs.}
 
 whether or not the chain satisfies detailed balance. Cf. the ``different object'' of Appendix row 17 and the split between lost and hidden (\S{}9.2). On a state space of exponential size the statement fails: the deterministic chain $x \mapsto f(x)$ with $f$ a one-way permutation has polynomial-time computable transition probabilities and no polynomial-time $R$ dominating $D_f(\cdot \mid y)$ within a constant $K$ on every $y$, since such an $R$ would output $f^{-1}(y)$ with probability at least $1/K$, an inverter (Proposition 6 below gives the quantitative form).
 
@@ -813,7 +818,7 @@ whether or not the chain satisfies detailed balance. Cf. the ``different object'
 S(x \mid y) \ge D(x \mid y) / n^c \qquad \text{for every } y \in Y \text{ and every } x \text{ with } (x, y) \in \operatorname{supp} D.
 \]
 
-\emph{Plain reading: a fast machine that, handed the end state, produces each start with at least a polynomial fraction of the odds the process itself gave it.}
+\emph{In words: a fast machine that, handed the end state, produces each start with at least a polynomial fraction of the odds the process itself gave it.}
 
 \end{definitionx}
 
@@ -822,7 +827,7 @@ The word is the one of average-case complexity theory: in Levin's definition of 
 \mathrm{pK}^t(x \mid y) \le k \qquad \text{implies} \qquad \Pr\bigl[\, \mathrm{USamp}_t(y) = x \,\bigr] \ge 1 / (a \cdot n \cdot 2^k)
 \]
 
-\emph{Plain reading: whatever the shortest fast description of $x$ given $y$ is, a random short program run on $y$ finds $x$ with about the matching odds, up to a factor $n$.}
+\emph{In words: whatever the shortest fast description of $x$ given $y$ is, a random short program run on $y$ finds $x$ with about the matching odds, up to a factor $n$.}
 
 {}[HILNO, Proposition 22]. Write $\mathrm{USamp}_t(x \mid y)$ for $\Pr[\mathrm{USamp}_t(y) = x]$.
 
@@ -833,7 +838,7 @@ The word is the one of average-case complexity theory: in Levin's definition of 
 \mathrm{USamp}_t(x \mid y) \ge D(x \mid y) / (b\, n^{c+3}),
 \]
 
-\emph{Plain reading: on a pair that the process reverses with at most $c \log n$ bits of computational cost, the universal reverse sampler, handed the end, guesses the start with the right odds up to a polynomial, the set $G$ excluding only the ends whose own description is anomalously short, a slice of mass $1/n$ that has nothing to do with $x$.}
+\emph{In words: on a pair that the process reverses with at most $c \log n$ bits of computational cost, the universal reverse sampler, handed the end, guesses the start with the right odds up to a polynomial, the set $G$ excluding only the ends whose own description is anomalously short, a slice of mass $1/n$ that has nothing to do with $x$.}
 
 where $b := 3a(1 + d)/2$ depends only on the universal machine.
 
@@ -842,11 +847,11 @@ where $b := 3a(1 + d)/2$ depends only on the universal machine.
 \sigma^{\mathrm{rev}}_D(x, y) \le c' \log n.
 \]
 
-\emph{Plain reading: if any fast machine reverses the process with the right odds up to a polynomial, then every pair whose end it covers is reversed about as cheaply as it was produced.}
+\emph{In words: if any fast machine reverses the process with the right odds up to a polynomial, then every pair whose end it covers is reversed about as cheaply as it was produced.}
 
 (Universal witness.) In the situation of ($\Leftarrow$), $\mathrm{USamp}_{p(t_S)}$ dominates the reverse conditional of $D$ within $n^{c''}$ on the same set $Y$, for a constant $c''$ depending on the same data.
 
-\emph{Plain reading: you never need the clever machine: if any fast machine can guess the start from the end with the right odds, then running a random short program on the end already does, up to a polynomial, on exactly the same ends.}
+\emph{In words: you never need the clever machine: if any fast machine can guess the start from the end with the right odds, then running a random short program on the end already does, up to a polynomial, on exactly the same ends.}
 
 \end{theoremx}
 
@@ -860,7 +865,7 @@ where $b := 3a(1 + d)/2$ depends only on the universal machine.
 \end{aligned}
 \]
 
-\emph{Plain reading: small production, and an end whose description is not anomalously short, together force the start's description from the end to be nearly as short as its conditional probability warrants.}
+\emph{In words: small production, and an end whose description is not anomalously short, together force the start's description from the end to be nearly as short as its conditional probability warrants.}
 
 Apply [HILNO, Proposition 22] with $k := \mathrm{pK}^t(x \mid y)$: $\mathrm{USamp}_t(x \mid y) \ge 1/(a n 2^k) \ge D(x \mid y) \cdot n^{-(c+1)} \cdot 2/(3(n + d)) \cdot 1/(a n) \ge D(x \mid y) / (b\, n^{c+3})$, using $n + d \le (1 + d) n$.
 
@@ -876,7 +881,7 @@ Apply [HILNO, Proposition 22] with $k := \mathrm{pK}^t(x \mid y)$: $\mathrm{USam
 
 \textbf{Proof.} Suppose instead that some $S$ dominates within $n^c$ on a set $Y_n$ with $D_2(Y_n) \ge 1 - 1/n$ for all large $n$. By ($\Leftarrow$), $\sigma^{\mathrm{rev}}_D \le c' \log n$ on every pair with $y \in Y_n$, at every $t \ge p'(n) := t_D + p(t_S(n))$. On the remaining pairs, of $D$-mass at most $1/n$, $\sigma^{\mathrm{rev}}_D \le 2(n + d)$ pointwise, since each of $\mathrm{pK}^t(x \mid y)$ and $\mathrm{pK}^t(y)$ is at most $n + d$ and $\log D(x, y) \le 0$. So $\mathrm{E}_D[\sigma^{\mathrm{rev}}_D] \le c' \log n + 2(n + d)/n \le (c' + 1) \log n$ for all large $n$ at $t = p'(n)$, and $D$ does not dissipate: Theorem 2's condition fails at $p = p'$, $C = c' + 1$.\qed
 
-\emph{Plain reading: a process with a computational arrow is one that no fast machine can run backward with the right odds even on most ends: where Corollary 1 said ``not exactly, on every end'', this says ``not even approximately, on all but a $1/n$ slice of ends'', for infinitely many lengths.}
+\emph{In words: a process with a computational arrow is one that no fast machine can run backward with the right odds even on most ends: where Corollary 1 said ``not exactly, on every end'', this says ``not even approximately, on all but a $1/n$ slice of ends'', for infinitely many lengths.}
 
 \textbf{Composition.} Three facts say how $\sigma$ behaves when processes are combined, in series or side by side. Let $X$ be a polynomial-time samplable distribution on $n$-bit strings and $F$, $G$ probabilistic polynomial-time maps on $n$-bit strings; draw $x \sim X$, $y := F(x)$, $z := G(y)$ with independent coins, so that $(X, Y, Z)$ is a Markov chain, and write $D_F$, $D_G$ and $D_{G \circ F}$ for the pair distributions of $(x, y)$, $(y, z)$ and $(x, z)$; all three are polynomial-time samplable. $H$ is the Shannon entropy of the joint law.
 
@@ -885,7 +890,7 @@ Apply [HILNO, Proposition 22] with $k := \mathrm{pK}^t(x \mid y)$: $\mathrm{USam
 \mathrm{pK}^{ct}(x \mid z) \le \mathrm{pK}^t(y \mid z) + \mathrm{pK}^t(x \mid y) + O(\log t).
 \]
 
-\emph{Plain reading: describing $y$ from $z$ and then $x$ from $y$ describes $x$ from $z$, within a constant multiple of the time and $O(\log t)$ extra bits.}
+\emph{In words: describing $y$ from $z$ and then $x$ from $y$ describes $x$ from $z$, within a constant multiple of the time and $O(\log t)$ extra bits.}
 
 \end{lemmax}
 
@@ -903,13 +908,13 @@ Apply [HILNO, Proposition 22] with $k := \mathrm{pK}^t(x \mid y)$: $\mathrm{USam
 \end{aligned}
 \]
 
-\emph{Plain reading: running two processes in a row cannot dissipate more, on average, than the two dissipate separately, plus about log $t$ bits, plus the information in the middle state that the two ends together do not determine, a term that is zero when the first process is deterministic or whenever the two ends fix the middle.}
+\emph{In words: running two processes in a row cannot dissipate more, on average, than the two dissipate separately, plus about log $t$ bits, plus the information in the middle state that the two ends together do not determine, a term that is zero when the first process is deterministic or whenever the two ends fix the middle.}
 
 the expectations over the joint draw; in particular $H(Y \mid X, Z) = 0$ when $F$ is deterministic.
 
 (b) \emph{Reversibility composes exactly.} If $S_F$ dominates $D_F(\cdot \mid y)$ within $n^a$ on every $y \in \operatorname{supp} Y$ and $S_G$ dominates $D_G(\cdot \mid z)$ within $n^b$ on every $z \in \operatorname{supp} Z$, then $S_F \circ S_G$, which runs $S_G$ on $z$ and $S_F$ on its output, dominates $D_{G \circ F}(\cdot \mid z)$ within $n^{a+b}$ on every $z \in \operatorname{supp} Z$, and by Theorem 4($\Leftarrow$) $\sigma^{\mathrm{rev}}_{D_{G \circ F}} \le O(\log n)$ on every support pair, at every $t \ge t_{D_G} + p(t_{S_F} + t_{S_G})$, $p$ the polynomial of Lemma 6 for the composite.
 
-\emph{Plain reading: if each step can be run backward with about the right odds, so can the two together, by running the backward steps in order; no entropy term appears.}
+\emph{In words: if each step can be run backward with about the right odds, so can the two together, by running the backward steps in order; no entropy term appears.}
 
 (c) \emph{Parallel composition is subadditive, pointwise.} Let $D'$ be a second polynomial-time samplable pair distribution on $n$-bit strings and $D \times D'$ the product, the pair distribution of $(\langle x, x' \rangle, \langle y, y' \rangle)$ with $(x, y) \sim D$ and $(x', y') \sim D'$ independent. Then for every $t \ge n$ and every $(x, y) \in \operatorname{supp} D$, $(x', y') \in \operatorname{supp} D'$,
 \[
@@ -920,7 +925,7 @@ the expectations over the joint draw; in particular $H(Y \mid X, Z) = 0$ when $F
 \end{aligned}
 \]
 
-\emph{Plain reading: two independent processes run side by side dissipate at most what each does alone, plus about log $t$ bits, on every pair and not only on average, because the joint probability is exactly the product and the joint description is at most the sum.}
+\emph{In words: two independent processes run side by side dissipate at most what each does alone, plus about log $t$ bits, on every pair and not only on average, because the joint probability is exactly the product and the joint description is at most the sum.}
 
 \end{propositionx}
 
@@ -933,7 +938,7 @@ the expectations over the joint draw; in particular $H(Y \mid X, Z) = 0$ when $F
 \end{aligned}
 \]
 
-\emph{Plain reading: the difference splits into a probability part, a description-of-the-start part, a description-of-the-end part, and the cost of the middle state.}
+\emph{In words: the difference splits into a probability part, a description-of-the-start part, a description-of-the-end part, and the cost of the middle state.}
 
 Take expectations over the joint draw. The first bracket has expectation $-H(X, Z) + H(X, Y) + H(Y, Z) = H(Y) + H(Y \mid X, Z)$, since $H(X, Y) = H(X, Y, Z) - H(Z \mid Y)$ by the Markov property and $H(Y, Z) = H(Y) + H(Z \mid Y)$. The second bracket is at most $O(\log t)$ pointwise by Lemma 12; the third is at most 0 by Lemma 4. For the last term, integrate Lemma 7's second form: with $W := \log 1/D_2(y) - \mathrm{pK}^t(y)$, where $D_2$ is the law of $Y$, and $\ell := \log(3(n + d)/2)$, $\Pr[W > \alpha + \ell] \le 2^{-\alpha}$ for every $\alpha \ge 0$, so $\mathrm{E}[W] \le \mathrm{E}[W^{+}] = \int_0^\infty \Pr[W > s]\, ds \le \ell + 1/\ln 2$ and $\mathrm{E}[\mathrm{pK}^t(y)] \ge H(Y) - \ell - 2$. Summing, $\mathrm{E}[\Delta] \le H(Y) + H(Y \mid X, Z) + O(\log t) - H(Y) + \ell + 2 = H(Y \mid X, Z) + O(\log t)$, which is $O(\log n)$ for polynomial $t$. If $F$ is deterministic then $Y$ is a function of $X$ and $H(Y \mid X, Z) = 0$. (b) By the Markov property, $D_{G \circ F}(x \mid z) = \sum_y D_G(y \mid z)\, D_F(x \mid y) \le n^{a+b} \sum_y S_G(y \mid z)\, S_F(x \mid y) = n^{a+b} \cdot \Pr[S_F(S_G(z)) = x]$, the composite outputting $\bot$ when either sampler does; it runs in polynomial time, and Theorem 4($\Leftarrow$) applies with the set of ends $\operatorname{supp} Z$. (c) $\log (D \times D')(\langle x, x' \rangle, \langle y, y' \rangle) = \log D(x, y) + \log D'(x', y')$ exactly, the samples being independent. Lemma 11 with $\mathrm{pK}^t(y' \mid y) \le \mathrm{pK}^t(y') + O(1)$ gives $\mathrm{pK}^{ct}(\langle y, y' \rangle) \le \mathrm{pK}^t(y) + \mathrm{pK}^t(y') + O(\log t)$, and the same construction, the two programs reading $y$ and $y'$ off the two halves of the conditioning string, gives $\mathrm{pK}^{ct}(\langle x, x' \rangle \mid \langle y, y' \rangle) \le \mathrm{pK}^t(x \mid y) + \mathrm{pK}^t(x' \mid y') + O(\log t)$. Add.\qed
 
@@ -946,7 +951,7 @@ Whether the term $H(Y \mid X, Z)$ in (a) can be removed is not settled here: in 
 \mathrm{E}_D\bigl[\, \sigma^{\mathrm{rev}}_D \,\bigr] \;=\; \bigl(\, \mathrm{E}_D\bigl[\, \mathrm{pK}^t(x \mid y) \,\bigr] - H(X \mid Y) \,\bigr) \;\pm\; O(\log n),
 \]
 
-\emph{Plain reading: mean dissipation is the mean excess of the bounded observer's description of the start, given the end, over what the end still leaves undetermined about the start in Shannon's sense, within about $\log n$ bits; the bits that are lost, the conditional entropy $H(X \mid Y)$, are subtracted and never charged.}
+\emph{In words: mean dissipation is the mean excess of the bounded observer's description of the start, given the end, over what the end still leaves undetermined about the start in Shannon's sense, within about $\log n$ bits; the bits that are lost, the conditional entropy $H(X \mid Y)$, are subtracted and never charged.}
 
 more precisely the difference of the two sides lies in $[-\log(3(n + d)/2) - 2,\; c_D \log n]$, the lower end for every $t \ge n$ and the upper for $t \ge t_D$; and the bracket itself is at least $-\log(3(n + d)/2) - 2$ for every $t \ge n$.
 
@@ -961,7 +966,7 @@ This is the sentence ``a bit that is lost is charged to both stories alike, so i
 \mathrm{E}_D\bigl[\, \sigma^{\mathrm{rev}}_D \text{ at time } t \,\bigr] \;\ge\; \log 1/\varepsilon(n) \;-\; H(X \mid f(X)) \;-\; O(\log n);
 \]
 
-\emph{Plain reading: a function that no fast algorithm inverts with probability better than two to the minus $s$ dissipates at least $s$ bits per use, minus the bits its output loses outright and minus about $\log n$, so that for a permutation, where nothing is lost, $s$ bits of security are $s$ bits of dissipation at any clock below the security time, within about $\log n$ bits.}
+\emph{In words: a function that no fast algorithm inverts with probability better than two to the minus $s$ dissipates at least $s$ bits per use, minus the bits its output loses outright and minus about $\log n$, so that for a permutation, where nothing is lost, $s$ bits of security are $s$ bits of dissipation at any clock below the security time, within about $\log n$ bits.}
 
 for a permutation $H(X \mid f(X)) = 0$. Conversely, for every randomized $A$ running in polynomial time $T$ that returns every $x$ from $f$($x$) with positive probability, $\mathrm{E}_D[\sigma^{\mathrm{rev}}_D \text{ at time } p(T)] \le \allowbreak \mathrm{E}_x[\, \log 1/\Pr[A(f(x)) = x] \,] + O(\log T)$, with $p$ the polynomial of Lemma 6; with Lemma 5 in place of the literal-print bound, at $t \ge \max(t_D, p(T))$, the right-hand side becomes $\mathrm{E}_x[\, \log 1/\Pr[A(f(x)) = x] \,] - H(X \mid f(X)) + O(\log T) + c_D \log n$, the mirror of the lower bound.
 
@@ -976,7 +981,7 @@ Theorem 2 and HILNO's Theorem 1 are qualitative; as far as we know, the quantita
 \sigma^{\mathrm{rev}}_{D^{\varphi,\psi}}(\varphi(x), \psi(y)) \text{ at time } ct + 2T(n) + O(n) \;\le\; \sigma^{\mathrm{rev}}_D(x, y) \text{ at time } t + O(1),
 \]
 
-\emph{Plain reading: relabel the states by any fast reversible code and the production of every pair changes by a constant number of bits, the cost of naming the code, once the clock is advanced by the time the code takes: $\sigma$ is a property of the process, not of how its states are written.}
+\emph{In words: relabel the states by any fast reversible code and the production of every pair changes by a constant number of bits, the cost of naming the code, once the clock is advanced by the time the code takes: $\sigma$ is a property of the process, not of how its states are written.}
 
 and the same with the two processes exchanged, the constant being the length of the codes of $\varphi$, $\psi$ and their inverses. \textbf{Proof.} $D^{\varphi,\psi}(\varphi(x), \psi(y)) = D(x, y)$, the maps being bijections. A program for $\psi(y)$ is a program for $y$ followed by the code of $\psi$, so $\mathrm{pK}^{t+T+O(n)}(\psi(y)) \le \mathrm{pK}^t(y) + O(1)$; a program for $\varphi(x)$ given $\psi(y)$ applies $\psi^{-1}$ to its input, runs a program for $x$ given $y$ on that work-tape copy of $y$, the constant factor $c$ of Lemma 11 paying for the simulation, and applies $\varphi$, so $\mathrm{pK}^{ct+2T+O(n)}(\varphi(x) \mid \psi(y)) \le \mathrm{pK}^t(x \mid y) + O(1)$. Add; the other direction uses $\varphi^{-1}$ and $\psi^{-1}$.\qed
 
@@ -987,7 +992,7 @@ and the same with the two processes exchanged, the constant being the length of 
 \mathrm{USamp}_{p(t_S)}(x \mid y) \;\ge\; S(x \mid y) / n^{e}.
 \]
 
-\emph{Plain reading: whatever a fast machine can do to guess the start from the end, running a random short program on the end does within a polynomial factor at a polynomially larger clock, the time-bounded analogue of the universality of the universal semimeasure.}
+\emph{In words: whatever a fast machine can do to guess the start from the end, running a random short program on the end does within a polynomial factor at a polynomially larger clock, the time-bounded analogue of the universality of the universal semimeasure.}
 
 \end{remarkx}
 
@@ -1016,34 +1021,34 @@ These three choices are the whole of the freedom in the physics frame. Every oth
 
 Theorem 3($c$) is a sandwich: $\mathrm{NP} \subseteq \mathrm{BPP} \Rightarrow \mathrm{BEM} \Rightarrow \text{no io-OWF}$. The paper's open problem is whether its second arrow reverses.
 
-\textbf{Question 1 (the open problem).} Does the non-existence of infinitely-often one-way functions force bounded exponential moments of the same-time Zurek defect for every polynomial-time samplable pair distribution? That is, does
+\textbf{Question 1 (the open problem).} Does the non-existence of infinitely-often one-way functions (Definition 3) force bounded exponential moments (Definition 7) of the same-time Zurek defect (Definition 6) for every polynomial-time samplable pair distribution? That is, does
 \[
 \text{no io-OWF} \;\;\Rightarrow\;\; \mathrm{BEM}
 \]
 
-\emph{Plain reading: if nothing is one-way, must the average of two to the defect, in both directions, stay under a polynomial for every fast process, at one time budget?}
+\emph{In words: if nothing is one-way, must the average of two to the defect, in both directions, stay under a polynomial for every fast process, once the time budget is a large enough polynomial, both orders of description sharing one clock?}
 
 hold? No answer is claimed in either direction, and no attack is made here beyond stating the problem and what is known around it. The problem is posed at the level of worlds: the hypothesis is a statement about every polynomial-time function, and the conclusion is asked for every $D$. It is posed for the same-time object of Definition 6, which is antisymmetric and shares one clock with Theorems 1 and 2, and not for the time-skewed variant defined next, which has a tighter sandwich but is two objects rather than one.
 
 \begin{figure}[t]
 \centering
-\begin{tikzpicture}[node distance=1.2cm and 2.6cm,
+\begin{tikzpicture}[node distance=1.2cm and 3.6cm,
     box/.style={draw, rounded corners=2pt, minimum height=2.3em, inner xsep=9pt, inner ysep=4pt},
     lab/.style={font=\small}]
   \node[box] (a) {$\mathrm{NP} \subseteq \mathrm{BPP}$};
   \node[box, right=of a] (b) {$\mathrm{BEM}$};
   \node[box, right=of b] (c) {no io-OWF};
   \draw[-{Latex[length=2mm]}] (a) -- node[lab, above] {Thm 3(b)} (b);
-  \draw[-{Latex[length=2mm]}] ([yshift=5pt]b.east) -- node[lab, above] {Thm 3(a)} ([yshift=5pt]c.west);
+  \draw[-{Latex[length=2mm]}] ([yshift=5pt]b.east) -- node[lab, above] {Thm 3(c), by (a)} ([yshift=5pt]c.west);
   \draw[-{Latex[length=2mm]}, dashed] ([yshift=-5pt]c.west) -- node[lab, below] {Question 1} ([yshift=-5pt]b.east);
   \path (b.south east) -- (c.south west) node[midway, below=0.4cm, lab, font=\small\itshape] {no relativizing proof (Prop.~10, conditional)};
 \end{tikzpicture}
-\caption{The same-time sandwich, Theorem 3($c$). Question 1 asks whether the second arrow reverses. \emph{Plain reading: easy $\mathrm{NP}$ tames the averages, which forbids one-way functions; the way back is open.}}
+\caption{The same-time sandwich, Theorem 3($c$). Question 1 asks whether the second arrow reverses. \emph{In words: easy $\mathrm{NP}$ tames the averages, which forbids one-way functions; the way back is open.}}
 \end{figure}
 
-\textbf{What a proof would have to use.} This is a speculation: an unpublished construction of the authors, not reproduced here and conditional on an injective one-way function that is exponentially secure, suggests a polynomial-time samplable pair distribution that violates $\mathrm{BEM}$ although its own function is not even weakly one-way. If that construction is right, no argument that derives $\mathrm{BEM}$ for a distribution $D$ from the non-one-wayness of $D$'s own function alone can prove the converse of Theorem 3, and a proof would have to use the global hypothesis, the non-one-wayness of functions other than the sampler's own. This is recorded as a guess about proof structure; it proves nothing.
+\textbf{What a proof would have to use.} This is a speculation: an unpublished construction of the author, not reproduced here and conditional on an injective one-way function that is exponentially secure, suggests a polynomial-time samplable pair distribution that violates $\mathrm{BEM}$ although its own function is not even weakly one-way. If that construction is right, no argument that derives $\mathrm{BEM}$ for a distribution $D$ from the non-one-wayness of $D$'s own function alone can prove the converse of Theorem 3, and a proof would have to use the global hypothesis, the non-one-wayness of functions other than the sampler's own. This is recorded as a guess about proof structure; it proves nothing.
 
-\emph{Plain reading: a guess, not a result: if a certain construction holds up, a proof that ``nothing is one-way'' forces tame averages would have to use the easiness of other functions, not only of the one that made the process.}
+\emph{In words: a guess, not a result: if a certain construction holds up, a proof that ``nothing is one-way'' forces tame averages would have to use the easiness of other functions, not only of the one that made the process.}
 
 \begin{definitionx}{9}[{the time-skewed defect and its moment condition}] For a polynomial $P$ with $P(s) \ge s$ and a time bound $s$,
 \[
@@ -1053,11 +1058,11 @@ hold? No answer is claimed in either direction, and no attack is made here beyon
 \end{gathered}
 \]
 
-\emph{Plain reading: the same comparison of the two orders of description as $\sigma$, except that the order being bounded above is given polynomially more time, giving two objects, one per direction, with $\Sigma^{-}(x, y) = \Sigma^{+}(y, x)$ and no antisymmetry.}
+\emph{In words: the same comparison of the two orders of description as $\sigma$, except that the order being bounded above is given polynomially more time, giving two objects, one per direction, with $\Sigma^{-}(x, y) = \Sigma^{+}(y, x)$ and no antisymmetry.}
 
 \end{definitionx}
 
-\textbf{$\mathrm{BEM}_{\mathrm{skew}}$} is the statement: for every polynomial-time samplable pair distribution $D$ there are polynomials $P$, $p_0$ and a constant $C$ such that for all $s \ge p_0(n) \ge n$ and all large $n$, $\mathrm{E}_D[2^{\Sigma^{+}_{s,P}}] \le s^C$ and $\mathrm{E}_D[2^{\Sigma^{-}_{s,P}}] \le s^C$. \emph{Plain reading: some polynomial amount of extra time for the side being compressed makes both exponential averages polynomial in the time budget.} The extra time $P$ is chosen per distribution; the statement carries no hypothesis. The bound is a power of $s$ and not of $n$ because the time loss in the symmetry-of-information input to Proposition 7(a) grows with $s$, so no single power of $n$ works for every $s$; for polynomial $s$ the two readings agree, and that is the only case Proposition 7($c$) uses.
+\textbf{$\mathrm{BEM}_{\mathrm{skew}}$} is the statement: for every polynomial-time samplable pair distribution $D$ there are polynomials $P$, $p_0$ and a constant $C$ such that for all $s \ge p_0(n) \ge n$ and all large $n$, $\mathrm{E}_D[2^{\Sigma^{+}_{s,P}}] \le s^C$ and $\mathrm{E}_D[2^{\Sigma^{-}_{s,P}}] \le s^C$. \emph{In words: some polynomial amount of extra time for the side being compressed makes both exponential averages polynomial in the time budget.} The extra time $P$ is chosen per distribution; the statement carries no hypothesis. The bound is a power of $s$ and not of $n$ because the time loss in the symmetry-of-information input to Proposition 7(a) grows with $s$, so no single power of $n$ works for every $s$; for polynomial $s$ the two readings agree, and that is the only case Proposition 7($c$) uses.
 
 \textbf{The refined sandwich.} With $\mathrm{DistNP} \subseteq \mathrm{AvgBPP}$ the statement that every distributional $\mathrm{NP}$ problem has an errorless randomized heuristic scheme (one randomized polynomial-time algorithm that, given an instance and a failure bound $\varepsilon$, answers ``I don't know'' on at most an $\varepsilon$ fraction of the instances and otherwise answers correctly, up to a small error probability over its own coins on every instance; this is the hypothesis of GKLO22's Lemma 26), Proposition 7 and Theorem 3 give
 \[
@@ -1067,7 +1072,7 @@ hold? No answer is claimed in either direction, and no attack is made here beyon
 \end{gathered}
 \]
 
-\emph{Plain reading: the same-time condition sits between ``$\mathrm{NP}$ is easy'' and the skewed condition; the skewed condition sits between ``$\mathrm{NP}$ is easy on average without errors'' and ``no one-way functions''.}
+\emph{In words: the same-time condition sits between ``$\mathrm{NP}$ is easy'' and the skewed condition; the skewed condition sits between ``$\mathrm{NP}$ is easy on average without errors'' and ``no one-way functions''.}
 
 The first arrow of the left chain is standard and relativizes (an errorless heuristic for a problem that is easy in the worst case is the worst-case algorithm itself). Question 1 asks whether the last arrow of the left chain reverses for the same-time object, that is, whether ``no io-OWF'' reaches all the way back to $\mathrm{BEM}$.
 
@@ -1082,7 +1087,7 @@ The first arrow of the left chain is standard and relativizes (an errorless heur
 
 (c) $\mathrm{BEM}_{\mathrm{skew}} \Rightarrow \text{no io-OWF}$.
 
-\emph{Plain reading: (a) if $\mathrm{NP}$ is easy on average without errors, the skewed defect is small on every pair, not only on average; (b) the skewed condition is weaker than the same-time one; (c) the skewed condition still rules out one-way functions.}
+\emph{In words: (a) if $\mathrm{NP}$ is easy on average without errors, the skewed defect is small on every pair, not only on average; (b) the skewed condition is weaker than the same-time one; (c) the skewed condition still rules out one-way functions.}
 
 \end{propositionx}
 
@@ -1091,7 +1096,7 @@ The first arrow of the left chain is standard and relativizes (an errorless heur
 \mathrm{pK}^t(x, y) \ge \mathrm{pK}^{p(t)}(x) + \mathrm{pK}^{p(t)}(y \mid x) - \log p(t). \qquad \text{(H1)}
 \]
 
-\emph{Plain reading: if $\mathrm{NP}$ is easy on average without errors, then the pair never costs less than $x$ plus $y$-given-$x$, once the parts are allowed polynomially more time.}
+\emph{In words: if $\mathrm{NP}$ is easy on average without errors, then the pair never costs less than $x$ plus $y$-given-$x$, once the parts are allowed polynomially more time.}
 
 Applied to the pair written in the other order it gives (H2), the same inequality with $x$ and $y$ exchanged; the $O(1)$-bit, $O(n)$-time re-encoding puts the reverse-order parts at time $p(cs + O(n))$ rather than $p(cs)$, which only lowers $\Sigma^{+}$ by Lemma 4, so it is absorbed by enlarging $P$. Lemma 11 at time $s$ (it needs $s \ge n$, which $p_0 \ge n$ ensures) gives
 \[
@@ -1101,7 +1106,7 @@ Applied to the pair written in the other order it gives (H2), the same inequalit
 \end{gathered}
 \]
 
-\emph{Plain reading: the pair costs at most either two-step description, at a constant multiple of the time.}
+\emph{In words: the pair costs at most either two-step description, at a constant multiple of the time.}
 
 For $s \ge p_0(n)$ put $t = cs \ge p_0(n)$ in (H1) and (H2). Then (H2) followed by (E1) reads $\mathrm{pK}^{p(cs)}(y) + \mathrm{pK}^{p(cs)}(x \mid y) - \log p(cs) \le \mathrm{pK}^{cs}(x, y) \le \mathrm{pK}^s(x) + \mathrm{pK}^s(y \mid x) + O(\log s)$, which is $\Sigma^{+}_{s,P} \le O(\log s)$; and (H1) followed by (E2) is $\Sigma^{-}_{s,P} \le O(\log s)$. Both hold for every pair, so both exponential averages are at most $2^{O(\log s)} = s^{O(1)}$ under every distribution on pairs, samplable or not, which is the bound Definition 9 asks for.
 
@@ -1112,7 +1117,7 @@ For $s \ge p_0(n)$ put $t = cs \ge p_0(n)$ in (H1) and (H2). Then (H2) followed 
 \Sigma^{+}_{s,P}(z, f(z)) \ge \bigl[\, n + c \log n - \log n - 4 \,\bigr] - \bigl[\, n + d + c_f \log n \,\bigr] = (c - c_f - 1) \log n - d - 4,
 \]
 
-\emph{Plain reading: on half the inputs the skewed defect is about $c \log n$, for any $c$ we choose, no matter how much extra time the reverse order is given.}
+\emph{In words: on half the inputs the skewed defect is about $c \log n$, for any $c$ we choose, no matter how much extra time the reverse order is given.}
 
 and, with $k$ such that $s \le n^k$, $\mathrm{E}_D[2^{\Sigma^{+}_{s,P}}] \ge n^{kC+1}$ for infinitely many $n$ once $c$ = kC + $c_f$ + 3, contradicting the bound $s^C \le n^{kC}$.\qed
 
@@ -1126,7 +1131,7 @@ L = \bigl\{\, (u, v, w, w', 1^s) : \exists\, M \in \{0,1\}^s \text{ such that } 
 \end{gathered}
 \]
 
-\emph{Plain reading: $\mathrm{H}_{\mathrm{pK}}$ says that some fast randomized algorithm, given a random pair of strings and random helper strings, tells whether the pair has a program exactly ten bits shorter than itself that prints it, given the helpers, within as many steps as the first helper is long; it is right on most inputs, may say ``I don't know'', and lies only with small probability over its own coins.}
+\emph{In words: $\mathrm{H}_{\mathrm{pK}}$ says that some fast randomized algorithm, given a random pair of strings and random helper strings, tells whether the pair has a program exactly ten bits shorter than itself that prints it, given the helpers, within as many steps as the first helper is long; it is right on most inputs, may say ``I don't know'', and lies only with small probability over its own coins.}
 
 \end{definitionx}
 
@@ -1138,7 +1143,7 @@ L = \bigl\{\, (u, v, w, w', 1^s) : \exists\, M \in \{0,1\}^s \text{ such that } 
 
 (c) $\mathrm{DistNP} \subseteq \mathrm{AvgBPP} \Rightarrow \mathrm{H}_{\mathrm{pK}}$, since $L \in \mathrm{NP}$ and $D$ is samplable; so (b) weakens the hypothesis of Proposition 7(a).
 
-\emph{Plain reading: to make the skewed defect small on every pair, you do not need all of $\mathrm{NP}$ to be easy on average without errors; you need one specific counting problem about description length to be easy on average without errors.}
+\emph{In words: to make the skewed defect small on every pair, you do not need all of $\mathrm{NP}$ to be easy on average without errors; you need one specific counting problem about description length to be easy on average without errors.}
 
 \end{propositionx}
 
@@ -1149,7 +1154,7 @@ L = \bigl\{\, (u, v, w, w', 1^s) : \exists\, M \in \{0,1\}^s \text{ such that } 
 \mathrm{DistPH}^O \subseteq \mathrm{AvgP}^O \qquad \text{and} \qquad \mathrm{UP}^O \cap \mathrm{coUP}^O \not\subseteq \mathrm{BPTIME}^O\bigl[\, 2^{n / \omega(\log n)} \,\bigr];
 \]
 
-\emph{Plain reading: relative to $O$, every distributional problem in the polynomial hierarchy has an errorless fast heuristic, yet some problem with unique witnesses on both sides has no fast randomized algorithm, even one allowed almost exponential time.}
+\emph{In words: relative to $O$, every distributional problem in the polynomial hierarchy has an errorless fast heuristic, yet some problem with unique witnesses on both sides has no fast randomized algorithm, even one allowed almost exponential time.}
 
 and (ii) GKLO22's remark after their Definition 17 that all the results of their Section 3 also hold with any oracle [GKLO22, \S{}3, p. 16:18], which covers Lemma 26 (their \S{}3.4). Then no relativizing argument proves $\mathrm{BEM}_{\mathrm{skew}} \Rightarrow \mathrm{NP} \subseteq \mathrm{BPP}$.
 
@@ -1169,7 +1174,7 @@ Everything in this subsection is relative to an oracle $O$: $\mathrm{pK}^t$ is c
 \mathrm{DistNP}^O \subseteq \mathrm{HeurP}^O \qquad \text{and} \qquad \mathrm{DistNP}^O \not\subseteq \mathrm{AvgSIZE}^O\bigl[\, 2^{a n / \log n} \,\bigr];
 \]
 
-\emph{Plain reading: relative to $O$, every distributional $\mathrm{NP}$ problem is easy on average if the algorithm may lie on a rare fraction of inputs, and some distributional $\mathrm{NP}$ problem is hard on average, even for circuits of nearly exponential size, if the algorithm must never lie.}
+\emph{In words: relative to $O$, every distributional $\mathrm{NP}$ problem is easy on average if the algorithm may lie on a rare fraction of inputs, and some distributional $\mathrm{NP}$ problem is hard on average, even for circuits of nearly exponential size, if the algorithm must never lie.}
 
 the same theorem lists an auxiliary-input one-way function against circuits of that size. The oracle is drawn at random; Theorem 15 [Hirahara and Nanashima 2022, \S{}5] states that the first inclusion holds with probability 1 over the draw.
 
@@ -1180,7 +1185,7 @@ Fix a polynomial $t$. A program running $t$ steps can only write $A$-queries of 
 \log(1/\mu) = 6\, a\, n\, i(t) / \log n \le (6/7) \cdot n \cdot (\log \log m + \log k) / \log n = o(n).
 \]
 
-\emph{Plain reading: the masked rows are a rare slice of all rows, but only mildly rare: their rarity is two to the minus something smaller than any constant fraction of $n$.}
+\emph{In words: the masked rows are a rare slice of all rows, but only mildly rare: their rarity is two to the minus something smaller than any constant fraction of $n$.}
 
 Fact $M$, read from the construction: conditioned on the restrictions of all levels $\le i(t)$ at every length, the bits of the masked rows $\{F(z, x, \ell) : z \in M_t\}$ are independent uniform bits, every $A$-answer a time-$t$ program can reach is already fixed, and $F$ returns the true masked bits when queried.
 
@@ -1191,7 +1196,7 @@ Fact $M$, read from the construction: conditioned on the restrictions of all lev
 \mathrm{E}_{D_m} \bigl[\, 2^{+\sigma_t} \,\bigr] \ge \mu^2 \cdot 2^n / \bigl( 2^{O(1)} \cdot t \bigr) = 2^{n - o(n)}.
 \]
 
-\emph{Plain reading: on the masked rows, a slice of the sampler's pairs of rarity $\mu$, the ``row first, then pair from row'' description costs about $n$ more bits than the ``pair first, then row from pair'' description, and $n$ is far more than the log of one over $\mu$ that the rarity could pay for; so the exponential average is essentially two to the $n$.}
+\emph{In words: on the masked rows, a slice of the sampler's pairs of rarity $\mu$, the ``row first, then pair from row'' description costs about $n$ more bits than the ``pair first, then row from pair'' description, and $n$ is far more than the log of one over $\mu$ that the rarity could pay for; so the exponential average is essentially two to the $n$.}
 
 (b) There is a set of oracles of measure at least $1/3$ relative to each of which $\mathrm{BEM}$ fails, for every polynomial $p_D$ and every constant $C$, and there are no io-OWF. Hence no relativizing argument proves the sharper ``$\mathrm{DistNP} \subseteq \mathrm{HeurP} \Rightarrow \mathrm{BEM}$'' (this clause uses (i) and (ii) only), and, with (iii), none proves ``$\text{no io-OWF} \Rightarrow \mathrm{BEM}$''.
 
@@ -1208,7 +1213,7 @@ Four remarks. (1) What breaks $\mathrm{BEM}$ is the masks: whole rows hidden at 
 \mathrm{E}_D \bigl[\, 2^{+\sigma_t} \cdot \mathbf{1}_S \,\bigr] = D(S) \cdot \mathrm{E}_D \bigl[\, 2^{\sigma_t} \bigm| S \,\bigr] \le D(S) \cdot 2^{\log(1/D(S)) + O(\log n)} = n^{O(1)}.
 \]
 
-\emph{Plain reading: the hidden slice has mass $D(S)$, and two to the defect, averaged over the slice, is at most one over that mass times a polynomial, so the slice contributes at most a polynomial to the exponential average; the thinness of the slice pays for the hidden bits.}
+\emph{In words: the hidden slice has mass $D(S)$, and two to the defect, averaged over the slice, is at most one over that mass times a polynomial, so the slice contributes at most a polynomial to the exponential average; the thinness of the slice pays for the hidden bits.}
 
 \end{propositionx}
 
@@ -1216,18 +1221,18 @@ The argument continues in Appendix B.2.
 
 Contrast with Proposition 10: there the hidden rows carry about $n$ bits each while the slice's rarity is $2^{-o(n)}$, so the thinness does not pay, and the exponential average is $2^{n - o(n)}$.
 
-\textbf{Status of the top arrow.} The relativization test for the same-time top arrow has therefore been run on the natural distributions of both errorless worlds, where the moments are bounded, trivially in one world and by a parameter count on a variant of the oracle in the other; the general case, same-time $\mathrm{BEM}$ relative to the Hirahara--Nanashima 2021 oracle, is open. The obstacle an unpublished note of the authors identifies for the general case is a rare-slice step in the sense of \S{}8.4, bounding the excess of the defect on the slice where an errorless heuristic answers ``I don't know'', and not a time-skew step. Nothing further is attempted here; the question is sharpened in \S{}8.5.
+\textbf{Status of the top arrow.} The relativization test for the same-time top arrow has therefore been run on the natural distributions of both errorless worlds, where the moments are bounded, trivially in one world and by a parameter count on a variant of the oracle in the other; the general case, same-time $\mathrm{BEM}$ relative to the Hirahara--Nanashima 2021 oracle, is open. The obstacle an unpublished note of the author identifies for the general case is a rare-slice step in the sense of \S{}8.4, bounding the excess of the defect on the slice where an errorless heuristic answers ``I don't know'', and not a time-skew step. Nothing further is attempted here; the question is sharpened in \S{}8.5.
 
 \textbf{The skewed object in the error-prone world.} Inferred from the proof of Proposition 10 as written, not proved: relative to the oracles of Proposition 10(b), $\mathrm{BEM}_{\mathrm{skew}}$ fails as well, and with it $\mathrm{H}_{\mathrm{pK}}$. The proof of (a) (Appendix B.1) fixes a polynomial $t$, lower-bounds $\mathrm{pK}^t(y)$ and $\mathrm{pK}^t(x \mid y)$ on the masked slice $M_t$, and compares them with a forward bracket of $2n + O(1)$ at the same time. In $\Sigma^{+}_{s,P}$ the two lower-bounded terms sit at the longer time $P(s)$ and the forward bracket at time $s$. $P$ is a polynomial, so $i(P(s)) \le (1/c) \log \log P(s) = O(\log \log n)$ is still a mask level, the display for $\log(1/\mu)$ gives $o(n)$ with $M_{P(s)}$ in place of $M_s$, the forward bracket is unchanged, and the two Markov steps run at time $P(s)$ give $\mathrm{E}_{D_m}[2^{\Sigma^{+}_{s,P}}] \ge 2^{n - o(n)}$ with probability at least $1/3$, for every polynomial $P$ and every $s \ge t_D$. Since $\Sigma^{+}_{s,P}$ only falls as $P$ grows (Lemma 4), it is enough to treat $P_j(s) := s^j$; the two Fatou steps of (b) run for each $j$ as before, with the events taken at the common threshold $2^{n/2}$ in place of $2^{n - o(n)}$, so that the oracle sets so obtained are nested in $j$ and their intersection has measure at least $1/3$, and relative to every oracle in it Definition 9 fails for $D$ at every $P$, $p_0$ and $C$. By the contrapositive of Proposition 8(b), which relativizes by the GKLO22 remark cited in Proposition 9, $\mathrm{H}_{\mathrm{pK}}$ also fails there. So in the error-prone world both sides of the converse of Proposition 8(b) are false, and in the two errorless worlds of Proposition 11 both are true ($\mathrm{H}_{\mathrm{pK}}$ by Proposition 8($c$), $\mathrm{BEM}_{\mathrm{skew}}$ by Proposition 9 and by Proposition 7(a) relativized): no oracle on record separates $\mathrm{BEM}_{\mathrm{skew}}$ from $\mathrm{H}_{\mathrm{pK}}$, and what blocks the converse is the quantitative obstruction named in \S{}8.5, not a barrier theorem.
 
-\emph{Plain reading: the oracle world that breaks the same-time bound also breaks the skewed bound, because giving the reverse-order description polynomially more time still leaves it inside the masked levels where the rows are hidden, and there the one counting problem is hard too, so the two sides of the open converse are both false in that world and both true in the two errorless worlds: no known oracle world tells them apart, and what stands in the way of the converse is a matter of size, not a black-box impossibility.}
+\emph{In words: the oracle world that breaks the same-time bound also breaks the skewed bound, because giving the reverse-order description polynomially more time still leaves it inside the masked levels where the rows are hidden, and there the one counting problem is hard too, so the two sides of the open converse are both false in that world and both true in the two errorless worlds: no known oracle world tells them apart, and what stands in the way of the converse is a matter of size, not a black-box impossibility.}
 
 \subsection*{8.4 The two obstacles, and where the excess lives}
 \phantomsection\addcontentsline{toc}{subsection}{8.4 The two obstacles, and where the excess lives}
 
 Two obstacles stand between the sandwich's ends and its middle, one per arrow.
 
-\textbf{At the top $(\mathrm{BEM} \Rightarrow \mathrm{NP} \subseteq \mathrm{BPP})$.} A proof would turn a condition on every samplable distribution into a worst-case algorithm for $\mathrm{NP}$; read contrapositively, it would derive average-case hardness, a $\mathrm{BEM}$ violation, from worst-case hardness of $\mathrm{NP}$. Reductions of that shape that are non-adaptive and black-box, from worst-case $\mathrm{NP}$ to average-case solvers of the $1 - 1/\mathrm{poly}$ kind, are known to collapse the polynomial hierarchy to its third level [Feigenbaum and Fortnow 1993; Bogdanov and Trevisan 2006]. Those results are stated for $1 - 1/\mathrm{poly}$ conditions and not for an exponential-tail condition like $\mathrm{BEM}$, so they do not close the door; they say that a proof must be adaptive or non-black-box, or must use the exponential tail specifically. This is our description of the obstacle, not a theorem; the cited collapse theorems are not used in any proof here.
+\textbf{At the top $(\mathrm{BEM} \Rightarrow \mathrm{NP} \subseteq \mathrm{BPP})$.} A proof would turn a condition on every samplable distribution into a worst-case algorithm for $\mathrm{NP}$; read contrapositively, it would derive average-case hardness, a $\mathrm{BEM}$ violation, from worst-case hardness of $\mathrm{NP}$. Reductions of that shape that are non-adaptive and black-box, from worst-case $\mathrm{NP}$ to average-case solvers of the $1 - 1/\mathrm{poly}$ kind, are known to collapse the polynomial hierarchy to its third level [Feigenbaum and Fortnow 1993; Bogdanov and Trevisan 2006, On worst-case to average-case reductions, \S{}4 Thm 17 and \S{}5 Thm 20]. Those results are stated for $1 - 1/\mathrm{poly}$ conditions and not for an exponential-tail condition like $\mathrm{BEM}$, so they do not close the door; they say that a proof must be adaptive or non-black-box, or must use the exponential tail specifically. This is our description of the obstacle, not a theorem; the cited collapse theorems are not used in any proof here.
 
 \textbf{At the bottom $(\text{no io-OWF} \Rightarrow \mathrm{BEM})$.} The quantifiers do not match. ``No io-OWF'' is, by Proposition 1, of the form ``for every accuracy $1/q$ there is a time $p(q)$'': accuracy is bought with time. $\mathrm{BEM}$ is of the form ``there is one time $p_D$, and then the tail $2^{-k}$ holds at every level $k$ up to $n$''. Universal-search arguments make an inverter uniform in time only relative to competitors of smaller time; no principle is known that makes accuracy uniform in this way. This description of the obstacle is likewise ours, not a theorem.
 
@@ -1238,7 +1243,7 @@ The bottom obstacle has an exact form. Under the hypothesis of Question 1, every
 \mathrm{E}_D \bigl[\, 2^{-\sigma_t} \cdot \mathbf{1}_G \,\bigr] \le n^{O(1)} \qquad \text{and} \qquad \mathrm{E}_D \bigl[\, 2^{+\sigma_t} \cdot \mathbf{1}_G \,\bigr] \le n^{O(1)}.
 \]
 
-\emph{Plain reading: without one-way functions, whatever could make the exponential average blow up sits on a slice of the sampler's pairs of mass at most $2/q$, for any polynomial $q$ you name, at the price of a time bound that grows with $q$.}
+\emph{In words: without one-way functions, whatever could make the exponential average blow up sits on a slice of the sampler's pairs of mass at most $2/q$, for any polynomial $q$ you name, at the price of a time bound that grows with $q$.}
 
 \end{propositionx}
 
@@ -1247,7 +1252,7 @@ The bottom obstacle has an exact form. Under the hypothesis of Question 1, every
 \mathrm{E}_D \bigl[\, 2^{-\sigma_t} \cdot \mathbf{1}_G \,\bigr] = \sum_G D \cdot m_R / m_F \le p\, n^{c_D} \sum_G m_R \le p\, n^{c_D}\, (3/2)^2 (n + d)^2,
 \]
 
-\emph{Plain reading: on the good slice, two to minus the defect is at most a polynomial times the reverse weight, and the reverse weights add up to at most about $n$ squared.}
+\emph{In words: on the good slice, two to minus the defect is at most a polynomial times the reverse weight, and the reverse weights add up to at most about $n$ squared.}
 
 by the Kraft display in the proof of Theorem 1(a); the other sign is the same with $\sum_G m_F$.\qed
 
@@ -1266,9 +1271,9 @@ There are two ways for $\mathrm{NP}$ to be easy on average, and \S{}8.3 used bot
 \end{gathered}
 \]
 
-\emph{Plain reading: errorless easiness gives the skewed moment bound and so no one-way functions, while error-prone easiness gives no one-way functions but provably not the moment bound by black-box means (the crossed arrow: no proof that works in every oracle world exists), so the moment bound is a condition of the errorless kind and one-wayness is not.}
+\emph{In words: errorless easiness gives the skewed moment bound and so no one-way functions, while error-prone easiness gives no one-way functions but, if the oracle is as read, not the moment bound by black-box means (the crossed arrow: no proof that works in every oracle world exists), so the moment bound is a condition of the errorless kind and one-wayness is not.}
 
-The heuristic account of why the two kinds of algorithm differ on an exponential average (the confession rate of an errorless algorithm on hidden points) is not argued here; it is deferred to an unpublished note of the authors.
+The heuristic account of why the two kinds of algorithm differ on an exponential average (the confession rate of an errorless algorithm on hidden points) is not argued here; it is deferred to an unpublished note of the author.
 
 Where this leaves the problem. In the terms of \S{}8.4, everything that can make the moments large sits on a rare slice, Proposition 12. The divide says that an errorless algorithm is made to confess on such a slice and an error-prone one is not, and the world of Proposition 10 is one where the confession is never demanded and the slice carries exponential weight. Question 1 (\S{}8.1) asks for $\mathrm{BEM}$ from ``no io-OWF'', a hypothesis of the error-prone kind; Proposition 10 says that no relativizing argument delivers it. The question that remains is the following, stated and not attacked.
 
@@ -1277,7 +1282,7 @@ Where this leaves the problem. In the terms of \S{}8.4, everything that can make
 \mathrm{H}_{\mathrm{pK}} \;\;\Rightarrow ?\;\; \mathrm{BEM} \qquad \text{(the same-time question)}
 \]
 
-\emph{Plain reading: if the one counting problem about description length has a fast algorithm that may say ``I don't know'' on rare inputs but never lies, must the two exponential averages of the defect be polynomial for every fast process at one time budget, and must the proof work in every oracle world?}
+\emph{In words: if the one counting problem about description length has a fast algorithm that may say ``I don't know'' on rare inputs but never lies, must the two exponential averages of the defect be polynomial for every fast process at one time budget, and must the proof work in every oracle world?}
 
 A ``yes'' would put $\mathrm{BEM}$ between $\mathrm{H}_{\mathrm{pK}}$ and ``no io-OWF'' for the same-time object, where $\mathrm{BEM}_{\mathrm{skew}}$ already sits by Proposition 8 ($\mathrm{DistNP} \subseteq \mathrm{AvgP}$ and $\mathrm{DistNP} \subseteq \mathrm{AvgBPP}$ each imply $\mathrm{H}_{\mathrm{pK}}$, so a yes here is the stronger statement). We expect, but do not prove, that a ``no'' would be an errorless world with hidden rows long relative to their rarity, the opposite of what the two constructions of Proposition 11 provide. Neither is attempted here; Proposition 11 is the evidence on record for the first, Proposition 10 for the divide that makes the question the right one.
 
@@ -1286,11 +1291,11 @@ A ``yes'' would put $\mathrm{BEM}$ between $\mathrm{H}_{\mathrm{pK}}$ and ``no i
 \mathrm{BEM}_{\mathrm{skew}} \;\;\Rightarrow ?\;\; \text{(i)} \qquad \text{(the characterization question)}
 \]
 
-\emph{Plain reading: if the two skewed exponential averages are polynomial for every fast process, must there be a fast test that, given any helper string, says ``random'' to at least half of all strings and never says it to a string with a short program given the helper?}
+\emph{In words: if the two skewed exponential averages are polynomial for every fast process, must there be a fast test that, given any helper string, says ``random'' to at least half of all strings and says ``not random'', with probability at least 0.9, to every string with a short program given the helper?}
 
-This is the technical challenge Kabanets and Kolokolova state in their concluding remarks, to derive a polynomial-time natural property from an assumed symmetry of information [Kabanets and Kolokolova 2025, \S{}8], pinned at logarithmic usefulness, since $n - O(\log n)$ is what Proposition 13 consumes. Two obstructions are on record, with different accountings. Obstruction A, the block partition: their Theorem 4.3 turns the chain rule into a natural property by cutting $x$ into $\ell = n/O(\log t)$ blocks and searching one block by brute force; it loses $\Theta(n)$ bits of usefulness even when the chain rule has no error at all, from the per-block union bound and the per-block error, and it needs the chain rule for a super-constant number of strings, which two-string symmetry of information is not known to give in the time-bounded setting [Kabanets and Kolokolova 2025, Theorem 4.3 and its proof, \S{}4.2, p. 24, and footnote 2, p. 2]. No oracle argument attaches to Obstruction A. The loss is structural rather than bookkeeping, for a reason short enough to state: polynomial time forces the blocks to have length $O(\log t)$, so there are $\ell = n/O(\log t)$ of them; a string compressible by only $O(\log n)$ bits then saves $O(\log n)/\ell$ bits, a fraction of a bit, per block, which no block-local test can see against the $O(1)$-bit fluctuation of a random block; and blocks large enough to show the 2 log $\ell$ saving the union bound needs, $O(\log n)$ of them, cost $2^{\Omega(n/\log n)}$ to search, which is the bound of their Appendix B. So the two obstructions are one wall seen from the two ends of the block-size trade-off (an inference; the accounting is in an unpublished note of the authors). Obstruction B, the depth term: their Appendix B derives a natural property from symmetry of information in time $2^{O(n/\log n)}$, the search for a shortest program costing the computational depth of $x$, $O(n/\log n)$ at an instance-dependent superpolynomial time bound [Kabanets and Kolokolova 2025, Appendix B, Theorem B.2 and Lemma B.1], and Hirahara argues informally that a relativizing technique is unlikely to improve the depth term in his own setting, since it would solve every $\mathrm{NP}$ language in time $2^{o(n/\log n)}$ against the Hirahara--Nanashima oracle [Hirahara 2022, Remark 6.4, \S{}6, p. 26:22]; every object of this paper relativizes (\S{}8.7), so, by the analogy of the depth term and not by citation, the natural-property route to the converse with the present machinery is, if that argument is right, closed on quantitative grounds, which we infer but do not prove here.
+This is the technical challenge Kabanets and Kolokolova state in their concluding remarks, to derive a polynomial-time natural property from an assumed symmetry of information [Kabanets and Kolokolova 2025, \S{}8], pinned at logarithmic usefulness, since $n - O(\log n)$ is what Proposition 13 consumes. Two obstructions are on record, with different accountings. Obstruction A, the block partition: their Theorem 4.3 turns the chain rule into a natural property by cutting $x$ into $\ell = n/O(\log t)$ blocks and searching one block by brute force; it loses $\Theta(n)$ bits of usefulness even when the chain rule has no error at all, from the per-block union bound and the per-block error, and it needs the chain rule for a super-constant number of strings, which two-string symmetry of information is not known to give in the time-bounded setting [Kabanets and Kolokolova 2025, Theorem 4.3 and its proof, \S{}4.2, p. 24, and footnote 2, p. 2]. No oracle argument attaches to Obstruction A. The loss is structural rather than bookkeeping, for a reason short enough to state: polynomial time forces the blocks to have length $O(\log t)$, so there are $\ell = n/O(\log t)$ of them; a string compressible by only $O(\log n)$ bits then saves $O(\log n)/\ell$ bits, a fraction of a bit, per block, which no block-local test can see against the $O(1)$-bit fluctuation of a random block; and blocks large enough to show the 2 log $\ell$ saving the union bound needs, $O(\log n)$ of them, cost $2^{\Omega(n/\log n)}$ to search, which is the bound of their Appendix B. So the two obstructions are one wall seen from the two ends of the block-size trade-off (an inference; the accounting is in an unpublished note of the author). Obstruction B, the depth term: their Appendix B derives a natural property from symmetry of information in time $2^{O(n/\log n)}$, the search for a shortest program costing the computational depth of $x$, $O(n/\log n)$ at an instance-dependent superpolynomial time bound [Kabanets and Kolokolova 2025, Appendix B, Theorem B.2 and Lemma B.1], and Hirahara argues informally that a relativizing technique is unlikely to improve the depth term in his own setting, since it would solve every $\mathrm{NP}$ language in time $2^{o(n/\log n)}$ against the Hirahara--Nanashima oracle [Hirahara 2022, Remark 6.4, \S{}6, p. 26:22]; every object of this paper relativizes (\S{}8.7), so, by the analogy of the depth term and not by citation, the natural-property route to the converse with the present machinery is, if that argument is right, closed on quantitative grounds, which we infer but do not prove here.
 
-\emph{Plain reading: the field already asks this question, and the paper asks it at the sharpest setting, a test that misses only a logarithmic number of bits; two things are known to block it: cutting a string into small pieces and testing one piece wastes a fixed fraction of the string, and the one attempt to do better found that a saving of a few bits spread over many pieces cannot be seen in any single piece, while searching for the shortest program instead costs a time that is exponential in $n$ over $\log n$, which Hirahara argues informally a black-box argument is unlikely to beat; if that is right, this route is closed to the black-box methods this paper uses.}
+\emph{In words: the field already asks this question, and the paper asks it at the sharpest setting, a test that misses only a logarithmic number of bits; two things are known to block it: cutting a string into small pieces and testing one piece wastes a fixed fraction of the string, and the reason, an inference of this paper, is that a saving of a few bits spread over many pieces cannot be seen in any single piece, while searching for the shortest program instead costs a time that is exponential in $n$ over $\log n$, which Hirahara argues informally a black-box argument is unlikely to beat; if that is right, this route is closed to the black-box methods this paper uses.}
 
 \subsection*{8.6 Placement}
 \phantomsection\addcontentsline{toc}{subsection}{8.6 Placement}
@@ -1304,7 +1309,7 @@ We infer, but do not prove, that Question 1 is a form of a recognised one, not a
 \end{gathered}
 \]
 
-\emph{Plain reading: the moment bound sits between ``description length is computable on average without lying'' and ``description length is computable on average, lying allowed'', which is where Hirahara puts ordinary symmetry of information.}
+\emph{In words: the moment bound sits between ``description length is computable on average without lying'' and ``description length is computable on average, lying allowed'', which is where Hirahara puts ordinary symmetry of information.}
 
 The arrows, in order: the definition of $\mathrm{DistNP} \subseteq \mathrm{AvgBPP}$, Proposition 8($c$); Proposition 8(b); Proposition 7($c$); [HILNO, Theorem 1, items 1 and 2]; and [HILNO, \S{}1.3, p. 12]. The last arrow is HILNO's exposition of the mechanism behind their Theorem 2: under no one-way function, by Ilango, Ren and Santhanam, for every polynomial-time samplable distribution $D$ there is an efficient average-case algorithm that approximates the resource-unbounded Kolmogorov complexity $K(x)$ of $x \sim D$, an error-prone heuristic; the converse is Ilango, Ren and Santhanam's Theorem 1 [Ilango, Ren and Santhanam 2021, Theorem 1, \S{}1.1], stated there for standard rather than infinitely-often one-way functions, which is why the arrow is drawn one way here. The converse of Proposition 8(b), whether $\mathrm{BEM}_{\mathrm{skew}}$ implies $\mathrm{H}_{\mathrm{pK}}$, is the errorless-versus-error-prone gap for computing $\mathrm{pK}^t$: Hirahara places worst-case symmetry of information for $K^t$ between an errorless and an error-prone heuristic scheme for $K^t$ on samplable inputs, and the two kinds of scheme are known to coincide for problems that admit an instance checker, which $\mathrm{pK}^t$ is not known to admit; Hirahara's placement is under a circuit lower bound for $\mathrm{E}$, which the probabilistic $\mathrm{pK}^t$ does not need here [Hirahara 2022, \S{}1 and Theorem 1.3; Hirahara and Santhanam 2022]. By Lemma 10(iii), $\sigma_t$ is the symmetry-of-information asymmetry for $\mathrm{pK}^t$, so $\mathrm{BEM}$ is the exponential-moment form of average-case symmetry of information with $O(\log n)$ error, and it interpolates the two known levels in tail strength. Hu, Manor and Oliveira prove that symmetry of information fails unconditionally for rKt and for pKt with the time cost charged into the measure [Hu, Manor and Oliveira 2026, \S{}1.2]; those are different measures from the fixed-time $\mathrm{pK}^t$ used here, and their results are cited only with that qualifier.
 
@@ -1315,11 +1320,11 @@ The arrows, in order: the definition of $\mathrm{DistNP} \subseteq \mathrm{AvgBP
 \mathrm{pK}^t(x, y) \ge \mathrm{pK}^{t^{c_1}}(x) + \mathrm{pK}^{t^{c_1}}(y \mid x) - O(\log n).
 \]
 
-\emph{Plain reading: describing the pair costs at least as much as describing the first string and then the second given the first, up to a logarithmic slack, once the two parts are given polynomially more time.}
+\emph{In words: describing the pair costs at least as much as describing the first string and then the second given the first, up to a logarithmic slack, once the two parts are given polynomially more time.}
 
 (b) Hence (H1) and (H2) of the proof of Proposition 7 hold with $p(t) := t^{c_1}$, $p_0(n) := (2n)^{c_0}$ and loss $O(\log n)$ in place of $\log p(t)$, so $\text{(i)} \Rightarrow \mathrm{BEM}_{\mathrm{skew}}$, pointwise and with the bounds of Proposition 7(a), by the proof of Proposition 7(a) unchanged, with the same constant $c'$ in $P$.
 
-\emph{Plain reading: a fast test that says ``no'' to half of all strings whatever the helper string, and says ``yes'', with probability at least 0.9, to every string with a short program given the helper, is enough to make the skewed defect small on every pair, a second way in beside $\mathrm{H}_{\mathrm{pK}}$ that needs no assumption about derandomization.}
+\emph{In words: a fast test that says ``no'' to half of all strings whatever the helper string, and says ``yes'', with probability at least 0.9, to every string with a short program given the helper, is enough to make the skewed defect small on every pair, a second way in beside $\mathrm{H}_{\mathrm{pK}}$ that needs no assumption about derandomization.}
 
 \end{propositionx}
 
@@ -1328,7 +1333,7 @@ The arrows, in order: the definition of $\mathrm{DistNP} \subseteq \mathrm{AvgBP
 \mathrm{pK}^t(x_1, \ldots, x_\ell \mid y) \ge \sum_i \mathrm{pK}^{t^{c_1}}(x_i \mid y, x_1, \ldots, x_{i-1}) - \ell \cdot O(\log N) - \delta(2N, 2t).
 \]
 
-\emph{Plain reading: the tuple costs at least the sum of the costs of its parts, each given the earlier parts, minus a slack of one logarithm per part and the test's own shortfall.}
+\emph{In words: the tuple costs at least the sum of the costs of its parts, each given the earlier parts, minus a slack of one logarithm per part and the test's own shortfall.}
 
 The theorem carries no derandomization hypothesis [Kabanets and Kolokolova 2025, Theorem 3.4 and its proof, \S{}3.3, pp. 21--22]. Its proof is parametric in $\delta$; their own uses of it take $\delta$ linear in $n$. Take $\ell = 2$, $x_1 = x$, $x_2 = y$, the conditioning string empty, so $N = 2n$, and $\delta(n, t) = O(\log n)$: the error is $2 \cdot O(\log 2n) + O(\log 4n) = O(\log n)$, which is the display, up to the re-encoding of the pair absorbed as in the proof of Proposition 7(a). Exchanging the roles of $x$ and $y$ gives (H2). (b) The proof of Proposition 7(a) consumes only (H1), (H2), Lemma 4 and Lemma 11, with a loss $O(\log s)$ at $s \ge n$.\qed
 
@@ -1340,7 +1345,7 @@ With Proposition 8 the placement now has two tops, not known to be comparable:
 \end{gathered}
 \]
 
-\emph{Plain reading: two different easiness conditions, neither known to imply the other, each force the skewed moment bound: the counting problem being easy on average without lying, and a fast test that calls most strings random given any helper.}
+\emph{In words: two different easiness conditions, neither known to imply the other, each force the skewed moment bound: the counting problem being easy on average without lying, and a fast test that calls most strings random given any helper.}
 
 No route from (i) to $\mathrm{H}_{\mathrm{pK}}$ appeared; and the route from $\mathrm{H}_{\mathrm{pK}}$ to (i), the observation that the ``no'' answers of an errorless scheme for $(L, D)$ form a natural property for conditional $K^t$ with usefulness $n - 10$, delivers largeness only on average over the helper strings $(w, w')$, where Definition 2.11 demands it for every conditioning string (an inference; not proved here); GKLO22's own conditional form of Lemma 26(1) likewise controls the conditioning string only for a $9/10$ fraction of the random strings $r$ [GKLO22, Lemma 26(2), p. 16:22]. So (i) and $\mathrm{H}_{\mathrm{pK}}$ are incomparable on the record: two sufficient conditions for $\mathrm{BEM}_{\mathrm{skew}}$, not a chain.
 
@@ -1366,7 +1371,7 @@ In this paper's terms the forward description of a pair is the action, and it is
 \sigma^{\mathrm{rev}}_D(x, y) = \bigl[\, \mathrm{pK}^t(y) + \mathrm{pK}^t(x \mid y) \,\bigr] - \log 1/D(x, y).
 \]
 
-\emph{Plain reading: the bits the bounded observer's backward story needs beyond the bits the forward story needed, near zero meaning the observer can rebuild the action from the end state and large meaning the action is gone for that observer.}
+\emph{In words: the bits the bounded observer's backward story needs beyond the bits the forward story needed, near zero meaning the observer can rebuild the action from the end state and large meaning the action is gone for that observer.}
 
 Theorem 1 says the gap is never much below zero on average, for every fast process. Theorem 2 says that a gap growing faster than any constant multiple of $\log n$ on average, for some fast process, infinitely often, is exactly the existence of one-way functions.
 
@@ -1405,11 +1410,11 @@ Two words are used as defined terms from here on. Information about the start is
 
 \end{itemize}
 
-Hidden splits further. A bit the observer does not have may be \emph{lost} in the sense above, recoverable by no algorithm at any budget; it may be \emph{expensive}, recoverable by no fast algorithm; or it may be hidden only \emph{to the wrong algorithm}, recoverable fast by a method the observer did not use. The first two of these appear as bullets on Aaronson's slide 2 [2025], as ``limited information'' and ``computational intractability''; his other reasons are chaos and ``irrationality / biases'', not the wrong algorithm (the mapping of his bullets to these kinds is an inference, not his statement). Theorem 2's dissipation is the \emph{expensive} kind and only that kind: $\mathrm{pK}^t$ in Definition 1 is a minimum over all programs of the given length, so a bit hidden merely to the wrong algorithm does not count; and a bit that is lost is charged to both stories alike, since the forward term $\log 1/D(x \mid y)$ in Definition 5 pays for it as much as the backward term does, so it cancels out of the gap (Proposition 5, \S{}6, makes this exact).
+Hidden splits further. A bit the observer does not have may be \emph{lost} in the sense above, recoverable by no algorithm at any budget; it may be \emph{expensive}, recoverable by no fast algorithm; or it may be hidden only \emph{to the wrong algorithm}, recoverable fast by a method the observer did not use. The first two of these appear as bullets in [Aaronson, Kardes and Hartle 2025, slide 2], as ``limited information'' and ``computational intractability''; their other reasons are chaos and ``irrationality / biases'', not the wrong algorithm (the mapping of their bullets to these kinds is an inference, not their statement). Theorem 2's dissipation is the \emph{expensive} kind and only that kind: $\mathrm{pK}^t$ in Definition 1 is a minimum over all programs of the given length, so a bit hidden merely to the wrong algorithm does not count; and a bit that is lost is charged to both stories alike, since the forward term $\log 1/D(x \mid y)$ in Definition 5 pays for it as much as the backward term does, so it cancels out of the gap (Proposition 5, \S{}6, makes this exact).
 
 \textbf{The arrow and its observer.} We expect, but do not prove, that the arrow is measurable by the bounded observer exactly when it vanishes, and unmeasurable exactly when it exists. For the description length $K^t$ of a uniformly random string that sentence is a theorem of Liu and Pass: one-way functions exist if and only if $K^t$ is mildly hard on average, meaning that for some polynomial $p$ every probabilistic polynomial-time algorithm fails to compute $K^t$ on at least a $1/p(n)$ fraction of the $n$-bit strings; so with no one-way function, for every polynomial $p$, some fast algorithm computes $K^t$ on all but a $1/p(n)$ fraction of the strings for infinitely many $n$, and with one every fast algorithm fails on a noticeable fraction [Liu and Pass 2020, Theorem 1.1 and the definition of mild average-case hardness]. For $\mathrm{pK}^t$ and for $\sigma^{\mathrm{rev}}_D$ the paper's own tools give the vanishing half only. If there are no io-OWFs then, by Proposition 1(ii) together with Lemmas 5 and 7, $\sigma^{\mathrm{rev}}_D$ lies within $O(\log n)$ of zero on all but a $1/\mathrm{poly}$ fraction of the pairs of every samplable $D$, so the observer's estimate ``zero'' is right within $O(\log n)$ on almost every pair. The other half, that when io-OWFs exist no bounded observer estimates $\sigma^{\mathrm{rev}}_D$ on the pairs of a dissipating process, does not follow from Proposition 1 or from HILNO's Theorem 1, neither of which says anything about computing $\mathrm{pK}^t$, and it is not claimed here. The two-sided sentence is therefore stated for $K^t$ on uniform strings and for one-way functions, Liu and Pass's objects, and carried for $\mathrm{pK}^t$, samplable pairs and io-OWFs as its vanishing half.
 
-\emph{Plain reading: when nothing is one-way, the observer's guess ``no arrow'' is right on almost every pair, and, for the plain time-bounded description length of a random string, it can even compute that length outright, whereas when something is one-way the observer gets that plain length wrong on a noticeable slice of random strings, and whether it also fails to estimate this paper's $\sigma$ is not proved here.}
+\emph{In words: when nothing is one-way, the observer's guess ``no arrow'' is right on almost every pair, and, for the plain time-bounded description length of a random string, it can even compute that length outright, whereas when something is one-way the observer gets that plain length wrong on a noticeable slice of random strings, and whether it also fails to estimate this paper's $\sigma$ is not proved here.}
 
 One remark on dimension. A $k$-bit composite is a point in a $k$-dimensional binary cube, not a point on a line; the milk and the number are both high-dimensional. What separates them is discrete against smooth, and a scrambled map against a smooth law, not the number of dimensions.
 
@@ -1477,22 +1482,22 @@ slot & thermodynamic instance & computational instance \\
 
 \textbf{Same shape in every row but the last; in the last, opposite sign.}
 
-\emph{Plain reading: in physics, ``the rules can't give you the arrow'' is proved and is fine, while in computing it is proved only for a few kinds of proof and, if it were fully true, the strong version of the law would be nearly false: same question, opposite answer.}
+\emph{In words: in physics, ``the rules can't give you the arrow'' is proved and is fine, while in computing it is proved only for a few kinds of proof and, if it were fully true, the strong version of the law would be nearly false: same question, opposite answer.}
 
 Three notes on the table. First, the two obstructions in the last row are both symmetry arguments, and that is where the shape agrees: time-reversal is a symmetry of every derivation from the dynamics, and oracle-invariance, naturalness and algebrization are each a symmetry of one family of proofs. Zermelo 1896 adds on the physics side that the strong form of the law is false as a consequence of the laws alone, by recurrence. Second, the computing column of the last row says nothing about physics and draws nothing from it: the sign flip is a fact about Ben-David--Halevi's theorem, read on its own. Third, both columns share a low-entropy start; the appendix separates that shared assumption from the extra one, and the table above lists the one assumption each column needs: shared in physics, extra in computing.
 
-\textbf{The axiom, in Kelvin's form.} What follows is a reading of Theorems 2, 3 and 4 and Corollary 2, an inference from them and no new claim. The extra assumption of the computing column can be stated three ways that Theorems 2 and 4 make one statement: (i) infinitely-often one-way functions exist; (ii) some polynomial-time samplable process has mean computational entropy production above $c \log n$ for infinitely many $n$, for every constant $c$ (Theorem 2); (iii) not every polynomial-time samplable process can be run backward by a polynomial-time sampler with the right odds within a polynomial, on all but a $1/n$ slice of its ends (Corollary 2 with Theorem 4). The third has the grammar of Kelvin's and Clausius's statements of the second law, impossibility statements about machines. Two things separate it from the Past Hypothesis. The weak half of the second law needs no such axiom here: Theorem 1 gives $\mathrm{E}_D[\sigma^{\mathrm{rev}}_D] \ge -O(\log n)$ for every process in every world, so only the strong half, that an arrow exists somewhere, is assumed. And there is a candidate for a weaker axiom whose status is exactly Question 1 (Section 8): (iv) some polynomial-time samplable process has a superpolynomial exponential moment of the same-time Zurek defect, infinitely often. Theorem 3 gives (i) $\Rightarrow$ (iv) $\Rightarrow$ $\mathrm{NP} \not\subseteq \mathrm{BPP}$; whether (iv) $\Rightarrow$ (i) is the converse of Theorem 3, so (iv) is either (i) in Jarzynski's words or a postulate strictly between $\mathrm{NP} \not\subseteq \mathrm{BPP}$ and (i) that no one has named. Row 13 of the appendix says how the analogy ends: unprovability of (i) in the strong sense would nearly refute it, so the axiom can be true and unprovable only in a weak sense.
+\textbf{The axiom, in Kelvin's form.} What follows is a reading of Theorems 2, 3 and 4 and Corollary 2, an inference from them and no new claim. The extra assumption of the computing column can be stated three ways, of which Theorems 2 and 4 make the first two one statement and derive the third from them: (i) infinitely-often one-way functions exist; (ii) some polynomial-time samplable process has mean computational entropy production above $c \log n$ for infinitely many $n$, for every constant $c$ (Theorem 2); (iii) not every polynomial-time samplable process can be run backward by a polynomial-time sampler with the right odds within a polynomial, on all but a $1/n$ slice of its ends (Corollary 2 with Theorem 4; whether (iii) forces (i) back is not proved, \S{}6, ``Average forms''). The third has the grammar of Kelvin's and Clausius's statements of the second law, impossibility statements about machines. Two things separate it from the Past Hypothesis. The weak half of the second law needs no such axiom here: Theorem 1 gives $\mathrm{E}_D[\sigma^{\mathrm{rev}}_D] \ge -O(\log n)$ for every process in every world, so only the strong half, that an arrow exists somewhere, is assumed. And there is a candidate for a weaker axiom whose status is exactly Question 1 (Section 8): (iv) some polynomial-time samplable process has a superpolynomial exponential moment of the same-time Zurek defect, infinitely often. Theorem 3 gives (i) $\Rightarrow$ (iv) $\Rightarrow$ $\mathrm{NP} \not\subseteq \mathrm{BPP}$; whether (iv) $\Rightarrow$ (i) is the converse of Theorem 3, so (iv) is either (i) in Jarzynski's words or a postulate strictly between $\mathrm{NP} \not\subseteq \mathrm{BPP}$ and (i) that no one has named. Row 13 of the appendix says how the analogy ends: unprovability of (i) in the strong sense would nearly refute it, so the axiom can be true and unprovable only in a weak sense.
 
-\emph{Plain reading: the rule at the top of the page can be said as ``locks exist'', as ``some fast process dissipates'', or as ``no fast machine reverses every fast process'', and the paper proves these are one rule. Half the second law comes free here, without the rule. A smaller rule might sit underneath it, and whether it is really smaller is the open problem.}
+\emph{In words: the rule at the top of the page can be said as ``locks exist'' or as ``some fast process dissipates'', and the paper proves these are one rule; it also proves that they force ``no fast machine reverses every fast process'', but not the way back. Half the second law comes free here, without the rule. A smaller rule might sit underneath it, and whether it is really smaller is the open problem.}
 
 \subsection*{9.5 Two ends of one scale}
 \phantomsection\addcontentsline{toc}{subsection}{9.5 Two ends of one scale}
 
-The idea that the second law and computational hardness have the same standing is not this paper's. Aaronson [2005, \S{}1 and \S{}10] proposed that a hardness assumption ``might eventually attain the same status as (say) the Second Law of Thermodynamics'' (\S{}1), an impossibility principle of which he says that the second law ``has the same character'' (\S{}10), and drew the split that the table's last row makes precise: the assumption ``could be falsified by a purely mathematical discovery such as $\mathrm{P} = \mathrm{NP}$'' (\S{}10), where the second law could not. The epistemic status, that a physicist would have declared the separation a law of nature, is Aaronson's footnote [2016, fn. 20]. The reading of the second law through a computationally bounded observer, without one-way functions, is Wolfram's [2023]. Aaronson, Kardes and Hartle [Suppes Lecture, 9 Oct 2025, slide 27; unpublished, slides only as of 2026-09-12] describe a Maxwell's demon that, if $\mathrm{P} = \mathrm{NP}$, uncomputes its own memory and so appears to reverse the second law, and they conclude that ``the appearance of the Second Law can be protected only by computational complexity''. That is a claim about a mechanism in physics. This paper does not make it; it is theirs, and it is reported here as theirs.
+The idea that the second law and computational hardness have the same standing is not this paper's. Aaronson [2005, \S{}1 and \S{}10] proposed that a hardness assumption ``might eventually attain the same status as (say) the Second Law of Thermodynamics'' (\S{}1), an impossibility principle of which he says that the second law ``has the same character'' (\S{}10), and drew the split that the table's last row makes precise: the assumption ``could be falsified by a purely mathematical discovery such as $\mathrm{P} = \mathrm{NP}$'' (\S{}10), where the second law could not. The epistemic status, that a physicist would have declared the separation a law of nature, is Aaronson's footnote [Aaronson 2016a, fn. 20]. The reading of the second law through a computationally bounded observer, without one-way functions, is Wolfram's [2023]. Aaronson, Kardes and Hartle [Suppes Lecture, 9 Oct 2025, slide 27; unpublished, slides only as of 2026-09-12] describe a Maxwell's demon that, if $\mathrm{P} = \mathrm{NP}$, uncomputes its own memory and so appears to reverse the second law, and they conclude that ``the appearance of the Second Law can be protected only by computational complexity''. That is a claim about a mechanism in physics. This paper does not make it; it is theirs, and it is reported here as theirs.
 
 Fox, Karamchedu and Mygdalas [2026] give a concrete instance of Aaronson's second criterion for a physical principle, ``whether accepting it places interesting constraints on new physical theories'' [Aaronson 2005, \S{}10]: assuming that the gravitational field is classical and couples to quantum fields through the semiclassical Einstein field equations, they show that the weak-field dynamics of a massive non-relativistic qubit solves an $\mathrm{NP}$-complete problem in polynomial time, and they read the result as evidence against semiclassical gravity, that is, for the quantization of gravity. The gravitationally-induced-entanglement experiment, the Bose--Marletto--Vedral proposal, not yet performed [Marletto, Deutsch and Vedral 2026, \S{}2.3; Marletto and Vedral 2017], is the measurement at the end of that chain: a robust null result, with the locality and mediation controls holding, would say that gravity is classical, and with the semiclassical coupling that would put $\mathrm{NP}$-complete problems in polynomial time. Two qualifiers travel with it. The chain from the theorem to the experiment is this paper's reading, not a theorem: Fox, Karamchedu and Mygdalas cite the entanglement experiments as the open empirical question their theorem bears on, and do not write the chain. And the theorem is error-free only: the step from non-linear dynamics to efficient $\mathrm{NP}$-solving is established for noiseless dynamics, Aaronson [2005, \S{}5] says the noise-tolerant version is undemonstrated, and Fox, Karamchedu and Mygdalas do not discuss noise. As with the demon, it is theirs and is reported as theirs; it does not touch Theorems 1 to 3.
 
-\emph{Plain reading: one 2026 paper says that if gravity is classical in a specific way, a small quantum system could crack the hardest known puzzles fast, and its authors take that as a reason to believe gravity is not classical; a planned lab experiment on whether gravity can entangle two masses sits at the end of that argument, though the authors do not draw that line themselves and the argument assumes a noise-free machine; it is their claim, not this paper's.}
+\emph{In words: one 2026 paper says that if gravity is classical in a specific way, a small quantum system could crack the hardest known puzzles fast, and its authors take that as a reason to believe gravity is not classical; a planned lab experiment on whether gravity can entangle two masses sits at the end of that argument, though the authors do not draw that line themselves and the argument assumes a noise-free machine; it is their claim, not this paper's.}
 
 The two positions sit at the two ends of one scale. At the $\mathrm{P} = \mathrm{NP}$ end is the Aaronson--Kardes--Hartle demon: if $\mathrm{NP}$ is easy, the appearance of the law can be undone. At the one-way-function end are Theorems 1 and 2: the mean production of every fast process is bounded below unconditionally, and it is unbounded above for some fast process exactly when one-way functions exist. The distance between the two ends is the converse of Theorem 3, Question 1 (Section 8): whether ``no one-way functions'' already forces bounded exponential moments of the defect for every fast process, or whether that condition sits strictly between ``no one-way functions'' and ``$\mathrm{NP}$ is easy''.
 
@@ -1556,7 +1561,7 @@ row & Crooks's side [Crooks 1999] & this paper's side & status & where \\
 \end{xltabular}}
 \par\medskip
 
-\emph{Plain reading of the table: the left column is the physics of running a process forward and backward and comparing the two. The middle column is this paper's version, where ``backward'' means the bounded observer's shortest fast description. Rows 1 to 3 and 6 are the same definitions in two vocabularies. Rows 7, 8 and 10 are theorems on both sides; rows 4 and 16 are a theorem on the computing side and, on the physics side, an assumption (row 4) and an observed fact (row 16). Row 5 is the one place where physics has a theorem and computing has an open question, and that question is whether one-way functions exist. Rows 9 and 12 to 15 are the physics readings of results that the body proves or cites: rare pairs carry the exponential average; the defect is a cost minus its state-function value; and the three worlds ``no arrow on most pairs'', ``no arrow on any pair'' and ``no arrow on most but not all'' are, in this paper's terms, ``no one-way functions'', ``$\mathrm{NP}$ is easy'' and ``no one-way functions but $\mathrm{NP}$ still hard somewhere''. Rows 2, 11 and 17 are choices: nothing proves that the two cells are the same kind of thing.}
+\emph{In words: the left column is the physics of running a process forward and backward and comparing the two. The middle column is this paper's version, where ``backward'' means the bounded observer's shortest fast description. Rows 1 to 3 and 6 are the same definitions in two vocabularies. Rows 7, 8 and 10 are theorems on both sides; rows 4 and 16 are a theorem on the computing side and, on the physics side, an assumption (row 4) and an observed fact (row 16). Row 5 is the one place where physics has a theorem and computing has an open question, and that question is whether one-way functions exist. Rows 9 and 12 to 15 are the physics readings of results that the body proves or cites: rare pairs carry the exponential average; the defect is a cost minus its state-function value; and the three worlds ``no arrow on most pairs'', ``no arrow on any pair'' and ``no arrow on most but not all'' are, in this paper's terms, ``no one-way functions'', ``$\mathrm{NP}$ is easy'' and ``no one-way functions but $\mathrm{NP}$ still hard somewhere''. Rows 2, 11 and 17 are choices: nothing proves that the two cells are the same kind of thing.}
 
 \subsection*{A.2 One statement, two instances, thirteen rows}
 \phantomsection\addcontentsline{toc}{subsection}{A.2 One statement, two instances, thirteen rows}
@@ -1594,7 +1599,7 @@ row & slot & second law & one-way functions & status \\
 \addlinespace[3pt]
 11 & the self-reference & the arrow needs a fact the laws cannot supply & the arrow needs a fact whose proof the arrow itself obstructs [Razborov and Rudich 1994] & (iv): a reading of rows 4 and 8 \\
 \addlinespace[3pt]
-12 & status of the extra assumption & --- & not provable without proving $\mathrm{P} \ne \mathrm{NP}$: proving that one-way functions exist ``is not easier than proving that $\mathrm{P} \ne \mathrm{NP}$'' [Goldreich 2019, \S{}1.1]; held by consensus; the second law is held by observation. $\mathrm{P} \ne \mathrm{NP}$, which the assumption implies, is provable in $\mathrm{PA}$ together with all true $\Pi_{1}$ sentences exactly when $\mathrm{SAT}$'s approximation rate is dominated by a Wainer function [Ben-David and Halevi 1992, Thm 4, an iff] & (ii) for the iff, on the computing side alone; no physics cell \\
+12 & status of the extra assumption & --- & not provable without proving $\mathrm{P} \ne \mathrm{NP}$: proving that one-way functions exist ``is not easier than proving that $\mathrm{P} \ne \mathrm{NP}$'' [Goldreich 2019, \S{}1.1]; held by consensus; the second law is held by observation. $\mathrm{P} \ne \mathrm{NP}$, which the assumption implies, is provable in $\mathrm{PA}$ together with all true $\Pi_{1}$ sentences exactly when $\mathrm{SAT}$'s approximation rate is dominated by a Wainer function (their terms) [Ben-David and Halevi 1992, Thm 4, an iff] & (ii) for the iff, on the computing side alone; no physics cell \\
 \addlinespace[3pt]
 13 & would independence make the columns identical? & --- & \textbf{no.} Independence of $\mathrm{P} \ne \mathrm{NP}$ from $\mathrm{PA}$ together with all true $\Pi_{1}$ sentences, which is what independence by any method they knew of, G\"odel-style self-reference set aside, amounts to (Cor. 3), would give $\mathrm{SAT}$-search in time $n^{\log^{*} n}$ \textbf{infinitely often} and kill only one-way functions against \textbf{super-polynomial} adversaries; standard one-way functions are not refuted [Ben-David and Halevi 1992, abstract, Cor. 6--7, Cor. 11, Def. 8]. The computing column would not become the physics column; its strong law would be nearly false & (ii) for the theorem, on the computing side alone; no physics cell \\
 \bottomrule
@@ -1603,15 +1608,15 @@ row & slot & second law & one-way functions & status \\
 
 \textbf{Rows 8 and 9 are the last slot of the table in Section 9.4: same shape in every row but that one; in that one, opposite sign.}
 
-\emph{Plain reading of the table: line the two stories up piece by piece. The rules run both ways in both (row 1). The observer is limited in both, but in different ways: one is missing facts, the other is missing time (row 2). Both start from a tidy state (row 3). Only the computing story needs a second assumption, that one-way functions exist (row 4), and there the arrow and the assumption are the same thing said twice (row 5). Rows 6 and 7 say what the arrow looks like: a log-ratio in both, and a picture that blurs slowly in physics against a lock that is shut from the first moment in computing. Rows 8 to 13 are about whether the arrow could ever be squeezed out of the rules alone. Physics: no, proved, and that is fine. Computing: no for three kinds of proof, and if it were no for every kind, the strong version of the computing law would be nearly false. Rows 10 and 11 add that the naive ``always'' version of each law is false, and that in computing the arrow is what blocks its own proof.}
+\emph{In words: line the two stories up piece by piece. The rules run both ways in both (row 1). The observer is limited in both, but in different ways: one is missing facts, the other is missing time (row 2). Both start from a tidy state (row 3). Only the computing story needs a second assumption, that one-way functions exist (row 4), and there the arrow and the assumption are the same thing said twice (row 5). Rows 6 and 7 say what the arrow looks like: a log-ratio in both, and a picture that blurs slowly in physics against a lock that is shut from the first moment in computing. Rows 8 to 13 are about whether the arrow could ever be squeezed out of the rules alone. Physics: no, proved, and that is fine. Computing: no for three kinds of proof, and if it were no for every kind, the strong version of the computing law would be nearly false. Rows 10 and 11 add that the naive ``always'' version of each law is false, and that in computing the arrow is what blocks its own proof.}
 
 \textbf{Score.} Thirteen rows. Eleven match in shape, or, for rows 12 and 13, have only a computing cell to fill. The two that do not match are rows 8 and 9, the two that answer whether the arrow can come from the laws alone, and they differ not only in degree but in sign. In degree: Loschmidt's non-derivability is complete and the barriers' is partial. In sign: in physics, the non-derivability is complete and harmless, since the arrow is a fact about the world and nothing is lost by its not being a theorem; in computing, making the non-derivability complete would mean independence, and by every method known to Ben-David and Halevi that is independence from $\mathrm{PA}$ together with all true $\Pi_{1}$ sentences, which their theorem says would put $\mathrm{SAT}$-search in time $n^{\log^{*} n}$ infinitely often and remove every one-way function secure against super-polynomial adversaries (in their sense, Def. 8). The physics column wants its assumption non-derivable and has it; the computing column would be nearly refuted in its strong form by the same thing. That is the caption of Section 9.4, ``same shape in every row but the last; in the last, opposite sign'', said row by row. Everything else in the table is a definition, a theorem with its proof, a picture marked as one, or a choice marked as one.
 
-\emph{Plain reading of the Score: eleven pieces have twins of the same kind, and the two that do not are the ones about squeezing the arrow out of the rules, which in physics is proved impossible and everyone is content, and in computing is proved impossible only for some kinds of proof, so that if it were proved impossible for every known kind the computing law would be nearly false in its strong form: same question, opposite answer.}
+\emph{In words: eleven pieces have twins of the same kind, and the two that do not are the ones about squeezing the arrow out of the rules, which in physics is proved impossible and everyone is content, and in computing is proved impossible only for some kinds of proof, so that if it were proved impossible for every known kind the computing law would be nearly false in its strong form: same question, opposite answer.}
 
 \textbf{The one thing it would take to make the equivalence literal.} The equivalence of Section 9.4 is one of logical shape and of standing: both arrows are conditional theorems, both conditions are unproved, and both are believed for the same kind of reason. It is not an equivalence of statements. The second law is a claim about the world and can only be earned by observation. ``One-way functions exist'' is an arithmetic sentence with a truth value, and $\mathrm{P} \ne \mathrm{NP}$, which it implies, could in principle be proved. The one thing that would make the two columns alike in standing, both assumptions then underivable, is a proof that $\mathrm{P} \ne \mathrm{NP}$ is independent of the axioms. It would not make them alike in content, and row 13 says why. Ben-David and Halevi [1992] say what that would cost. Their Cor. 2: if $\mathrm{P} = \mathrm{NP}$ then $\mathrm{PA}$ together with all true $\Pi_{1}$ sentences proves it, so independence can only mean that $\mathrm{P} \ne \mathrm{NP}$ is true and unprovable. Their Cor. 3: every independence method known to them, G\"odel-style self-reference set aside (their \S{}1.3, fn. 2, and the sentence before Cor. 3), preserves $\Pi_{1}$ truth, so an independence proof by any such method would be independence from $\mathrm{PA}$ together with all true $\Pi_{1}$ sentences. Their abstract, Cor. 6--7 and Cor. 11: that would put $\mathrm{SAT}$-search in time $n^{\log^{*} n}$ \textbf{infinitely often}, a fixed polynomial on each of infinitely many intervals of input lengths common to all of $\mathrm{NP}$, and would remove every one-way function secure against \textbf{super-polynomial} adversaries (in their sense, Def. 8), leaving only those secure against polynomial-time adversaries, the standard notion and the one Definition 3 uses. So the one step that would make the equivalence literal is the step that would nearly refute the strong form of the computing law, and it is not a goal of this paper. No route to such a proof is known: Aaronson [2003] writes that if $\mathrm{P} \ne \mathrm{NP}$ is unprovable in a strong theory such as Peano arithmetic, ``utterly new techniques would be required to show that''. Until then the equivalence is structural and epistemic, which is what Section 9 claims and all it claims.
 
-\emph{Plain reading: the two columns would only become the same kind of thing if ``$\mathrm{P}$ is not $\mathrm{NP}$'' could be shown unprovable, but the only known ways of showing a statement unprovable would, for this statement, also show that $\mathrm{SAT}$ is nearly easy for infinitely many input sizes and that the strong kind of one-way function does not exist, so the thing that would make the analogy perfect is the thing that would nearly break the computing law, and nobody knows how to do it anyway.}
+\emph{In words: the two columns would only become the same kind of thing if ``$\mathrm{P}$ is not $\mathrm{NP}$'' could be shown unprovable, but the only known ways of showing a statement unprovable would, for this statement, also show that $\mathrm{SAT}$ is nearly easy for infinitely many input sizes and that the strong kind of one-way function does not exist, so the thing that would make the analogy perfect is the thing that would nearly break the computing law, and nobody knows how to do it anyway.}
 
 \section*{Appendix B: proofs of the oracle propositions}
 \phantomsection\addcontentsline{toc}{section}{Appendix B: proofs of the oracle propositions}
@@ -1632,7 +1637,7 @@ Assembly, with the two Fatou steps. Let $G \subseteq P$ be the pairs bad in neit
 \sigma_t(x, y) \ge (n - 6) + (\log N - \log t - 6) - (2n + O(1)) = \log |M_t| - \log t - O(1),
 \]
 
-\emph{Plain reading: the row costs $n$ bits, the pair given the row costs the log of the number of masked pairs less the log of the search time, and the forward side costs $2n$; so the defect is the log of the number of masked rows minus the log of the time.}
+\emph{In words: the row costs $n$ bits, the pair given the row costs the log of the number of masked pairs less the log of the search time, and the forward side costs $2n$; so the defect is the log of the number of masked rows minus the log of the time.}
 
 and $D_m(G) \ge (1/4) \mu$, so $\mathrm{E}_{D_m}[2^{\sigma_t}] \ge (\mu/4) \cdot |M_t| / (2^{O(1)} t) = \mu^{2} 2^n / (2^{O(1)} t)$, which is $2^{n - o(n)}$ by the display for $\log(1/\mu)$. The conditioning was on an arbitrary visible restriction, so the probability bound holds outright for each $n$ and each $t$. This is (a).
 
@@ -1643,7 +1648,7 @@ and $D_m(G) \ge (1/4) \mu$, so $\mathrm{E}_{D_m}[2^{\sigma_t}] \ge (\mu/4) \cdot
 
 The two worlds and the hidden slice $S$ are those of the statement in \S{}8.3.
 
-In the 2021 world the hidden function is only verifiable, not evaluable: a sampler cannot see a hidden symbol except by guessing it, and a guessed pair is two independent strings, $x$ uniform and the symbol uniform, so each of the four description lengths is within $O(1)$ of the corresponding log-probability by printing, and the Kraft argument of Theorem 3(b) bounds both moments. The parameter count applies to a direct-evaluation variant of that oracle, in which the hidden symbol has $2n/(\varepsilon(n) \log n)$ bits and the hidden slice at any reachable level $i \ge 1$ has rarity at least that large in the exponent for large $n$, since $\varepsilon(n) \to \infty$; an unpublished note of the authors labels that variant ``not Hirahara--Nanashima's oracle, not verified line by line'', and the qualifier is carried here. In Impagliazzo's world the hidden slice has at most $2^{n/2}$ of the $2^n$ points, the reverse conditional is bounded through the helper's syntactic answers to range questions, and the excess on the slice is, on exponential average, at most $\log |S| + O(\log n)$, so $D(S) \cdot \mathrm{E}[2^{\sigma_t} \mid S] \le |S|^{2} n^{O(1)} / 2^n \le n^{O(1)}$. Off the hidden slice both orders of description are guided by the helper's forced answers, and the Kraft sums of Section 3 bound the moments as in the proof of Theorem 3(b). By Lemma 10(ii) the same holds for $\mathrm{E}[2^{-\sigma_t}]$ with the outputs exchanged.
+In the 2021 world the hidden function is only verifiable, not evaluable: a sampler cannot see a hidden symbol except by guessing it, and a guessed pair is two independent strings, $x$ uniform and the symbol uniform, so each of the four description lengths is within $O(1)$ of the corresponding log-probability by printing, and the Kraft argument of Theorem 3(b) bounds both moments. The parameter count applies to a direct-evaluation variant of that oracle, in which the hidden symbol has $2n/(\varepsilon(n) \log n)$ bits and the hidden slice at any reachable level $i \ge 1$ has rarity at least that large in the exponent for large $n$, since $\varepsilon(n) \to \infty$; an unpublished note of the author labels that variant ``not Hirahara--Nanashima's oracle, not verified line by line'', and the qualifier is carried here. In Impagliazzo's world the hidden slice has at most $2^{n/2}$ of the $2^n$ points, the reverse conditional is bounded through the helper's syntactic answers to range questions, and the excess on the slice is, on exponential average, at most $\log |S| + O(\log n)$, so $D(S) \cdot \mathrm{E}[2^{\sigma_t} \mid S] \le |S|^{2} n^{O(1)} / 2^n \le n^{O(1)}$. Off the hidden slice both orders of description are guided by the helper's forced answers, and the Kraft sums of Section 3 bound the moments as in the proof of Theorem 3(b). By Lemma 10(ii) the same holds for $\mathrm{E}[2^{-\sigma_t}]$ with the outputs exchanged.
 
 \section*{Acknowledgements}
 \phantomsection\addcontentsline{toc}{section}{Acknowledgements}
@@ -1669,9 +1674,9 @@ Each entry ends with a bracket naming the parts read, or the read source through
 
 \item Aaronson, S., Kardes, G., Hartle, H. (2025). Computational complexity and explanations in physics. Columbia Suppes Lecture, 9 Oct 2025, slides; unpublished. [read: slides 2 and 27]
 
-\item Almheiri, A., Marolf, D., Polchinski, J., Sully, J. (2013). Black holes: complementarity or firewalls? J. High Energy Phys. 2013(2):1--20; arXiv 1207.3123. [via Aaronson 2016b \S{}6.3]
-
 \item Aaronson, S., Wigderson, A. (2008). Algebrization: a new barrier in complexity theory. STOC 2008, pp. 731--740; ECCC TR08-005; ACM Trans. Comput. Theory 1(1), article 2 (2009). [read: ECCC version, \S{}1.2, \S{}2 Def. 2.3, \S{}5.1 Thms 5.1 and 5.3]
+
+\item Almheiri, A., Marolf, D., Polchinski, J., Sully, J. (2013). Black holes: complementarity or firewalls? J. High Energy Phys. 2013(2):1--20; arXiv 1207.3123. [via Aaronson 2016b \S{}6.3]
 
 \item Baker, T., Gill, J., Solovay, R. (1975). Relativizations of the $\mathrm{P} =? \mathrm{NP}$ question. SIAM J. Comput. 4(4):431--442. [via Fortnow 1994 \S{}3.1; Aaronson--Wigderson 2008 \S{}5.1]
 
@@ -1709,9 +1714,9 @@ Each entry ends with a bracket naming the parts read, or the read source through
 
 \item Goldreich, O. (2019). On the foundations of cryptography. Survey. [read: \S{}1.1]
 
-\item Harlow, D., Hayden, P. (2013). Quantum computation vs. firewalls. arXiv 1301.4504. [via Aaronson 2016b, Thm 6.4.1]
-
 \item Gr\"unwald, P., Vit\'anyi, P. (2004). Shannon information and Kolmogorov complexity. arXiv cs/0410002. [read: the passage citing Li--Vit\'anyi Thm 3.9.1]
+
+\item Harlow, D., Hayden, P. (2013). Quantum computation vs. firewalls. arXiv 1301.4504. [via Aaronson 2016b, Thm 6.4.1]
 
 \item Hirahara, S. (2022). Symmetry of information from meta-complexity. CCC 2022, LIPIcs 234:26. [read: \S{}1, \S{}4, \S{}6 Remark 6.4, \S{}8; Thms 1.2, 1.3, 4.1, 8.2]
 
@@ -1771,7 +1776,7 @@ Each entry ends with a bracket naming the parts read, or the read source through
 
 \item Shiraishi, N., Takesue, S. (2025). Complete ergodicity in one-dimensional reversible cellular automata. J. Stat. Phys. 192:165; arXiv 2408.06691. [read: \S{}\S{}1, 2, 8, 9]
 
-\item Takesue, S. (1987). Reversible cellular automata and statistical mechanics. Phys. Rev. Lett. 59:2499. [via its abstract]
+\item Takesue, S. (1987). Reversible cellular automata and statistical mechanics. Phys. Rev. Lett. 59:2499. [read: abstract]
 
 \item Takesue, S. (1989). Ergodic properties and thermodynamic behavior of elementary reversible cellular automata. I. Basic properties. J. Stat. Phys. 56(3/4):371--402. [read: abstract, \S{}\S{}1, 2, 5, 6; \S{}\S{}3--4 by heading]
 

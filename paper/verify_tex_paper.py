@@ -11,7 +11,7 @@ mechanically:
      section 6, the old 6-8 as 7-9, Appendix A, Appendix B with the oracle proofs);
   T  the first sentence of every theorem-like statement (Theorems 0-4, Lemmas 1-12,
      Propositions 1-13, Definitions 1-10, Remarks 1-6, Corollaries 1-2) appears, with its own number;
-  P  all N_PLAIN italic plain readings appear, and in the .tex each one is an emph group that is
+  P  all N_PLAIN italic "In words" sentences (the plain readings, renamed in B50 Phase 3) appear, and in the .tex each one is an emph group that is
      not nested inside another italic group (a nested emph would flip upright);
   L  the counts of the proof label and the two read-status brackets agree (Proof; [read; [via.
      B50 Revision 1, 20 Sep 2026: the Proved / Proved-conditional / Proved; known labels became
@@ -26,7 +26,9 @@ mechanically:
      tikzpicture, its node labels and its caption with the plain reading appear in the PDF; the
      block is stripped from the markdown before every other check, since its TikZ source is not
      text of the paper;
-  I  every markdown paragraph appears in the PDF, whole and in one piece;
+  H  the header line under the title is name, e-mail, date; all three on page 1 (the e-mail as a footnote,
+     B50 Phase 3, 20 Sep 2026);
+  I  every other markdown paragraph appears in the PDF, whole and in one piece;
   Z  the build log has no overfull box wider than 10pt and no missing character.
 
 Usage:  ../../../../.venv/bin/python verify_tex_paper.py
@@ -44,7 +46,10 @@ MD = os.path.join(HERE, 'ENTROPY_PRODUCTION.md')
 PDF = os.path.join(HERE, 'ENTROPY_PRODUCTION.pdf')
 TEX = os.path.join(HERE, 'ENTROPY_PRODUCTION.tex')
 LOG = os.path.join(HERE, 'ENTROPY_PRODUCTION.log')
-N_PLAIN = 100         # italic plain readings: 99 after formulas, tables or the figure (the plain reading of the abstract among them),
+N_PLAIN = 99          # italic 'In words' sentences after formulas, tables or the figure (the abstract's among them); the label was
+                      # 'Plain reading' until B50 Phase 3 (20 Sep 2026), when the count also stopped including the mention in the
+                      # Conventions (1.3): the pattern now requires the colon, so it counts the sentences and not the label's name.
+                      # History (as 'Plain reading', with the Conventions mention counted, so one more than the sentences):
                       # plus the mention in the Conventions (section 1.3 since B48, 20 Sep 2026; the section numbers in the
                       # history below are those before B48, when the Conventions and the abstract preceded section 1)
                       # (62 at E52; 64 after the B20 edit of 15 Sep 2026 added the section now numbered 1.1 (1.4 at E55) and the
@@ -247,13 +252,13 @@ def main():
           'T4 the open problem is stated once as Question 1 (B50 item 3) and its head appears in the PDF')
 
     # ---- P. plain readings -----------------------------------------------------------------
-    prs = re.findall(r'(?<!\*)\*Plain reading[^*]*\*', md)
+    prs = re.findall(r'(?<!\*)\*In words:[^*]*\*', md)
     badp = [p[:50] for p in prs if squash(p) not in pdf_sq and not all(w in pdf_sq for w in words(p))]
-    check(len(prs) == N_PLAIN, 'P1 %d italic plain readings in the markdown (%d after formulas, tables or '
-                               'the figure, the abstract\'s among them, plus the mention in the Conventions, 1.3)' % (N_PLAIN, N_PLAIN - 1), str(len(prs)))
-    check(not badp, 'P2 all %d plain readings appear in the PDF' % len(prs), str(badp))
+    check(len(prs) == N_PLAIN, 'P1 %d italic "In words" sentences in the markdown (after formulas, tables or '
+                               'the figure, the abstract\'s among them; the label\'s mention in the Conventions, 1.3, not counted)' % N_PLAIN, str(len(prs)))
+    check(not badp, 'P2 all %d "In words" sentences appear in the PDF' % len(prs), str(badp))
     tex = open(TEX, encoding='utf-8').read()
-    emph = [m.start() for m in re.finditer(r'\\emph\{Plain reading', tex)]
+    emph = [m.start() for m in re.finditer(r'\\emph\{In words:', tex)]
     nested = 0
     for pos in emph:                       # an unclosed \emph{ or \textit{ before it would nest it
         depth = 0
@@ -264,7 +269,7 @@ def main():
             elif tok == '}' and depth:
                 depth -= 1
         nested += bool(depth)
-    check(len(emph) == N_PLAIN and nested == 0, 'P3 all %d plain readings are set italic (\\emph) in the '
+    check(len(emph) == N_PLAIN and nested == 0, 'P3 all %d "In words" sentences are set italic (\\emph) in the '
           '.tex, none nested inside another italic group' % N_PLAIN, '%d emph, %d nested' % (len(emph), nested))
 
     # ---- L. labels and tags ----------------------------------------------------------------
@@ -315,11 +320,11 @@ def main():
               and figs[0].strip() in tex and re.search(r'\\begin\{figure\}\[t\]\n\\centering\n.*?\\caption\{.*?\}\n\\end\{figure\}', tex, re.S) is not None)
     check(ok_env, 'X1 one tex-figure block in the markdown, typeset verbatim as one figure environment with one tikzpicture and a caption',
           '%d blocks, %d figure envs' % (len(figs), nfig_tex))
-    labels = ['NP', 'BPP', 'BEM', 'no io-OWF', 'Thm 3(b)', 'Thm 3(a)', 'Question 1', 'no relativizing proof (Prop. 10, conditional)']
+    labels = ['NP', 'BPP', 'BEM', 'no io-OWF', 'Thm 3(b)', 'Thm 3(c), by (a)', 'Question 1', 'no relativizing proof (Prop. 10, conditional)']   # second arrow relabelled by Referee E (b1), B50 Phase 3
     badx = [l for l in labels if squash(l) not in pdf_sq]
-    capm = re.search(r'^\*Figure 1\. (.+?)\* (\*Plain reading: .+\*)$', md, re.M)
+    capm = re.search(r'^\*Figure 1\. (.+?)\* (\*In words: .+\*)$', md, re.M)
     cap_ok = capm is not None and squash('Figure 1: ' + capm.group(1)) in pdf_sq and squash(capm.group(2)) in pdf_sq
-    check(not badx and cap_ok, 'X2 the figure\'s node labels, its caption ("Figure 1: ...") and its plain reading appear in the PDF',
+    check(not badx and cap_ok, 'X2 the figure\'s node labels, its caption ("Figure 1: ...") and its "In words" sentence appear in the PDF',
           'missing labels %s; caption %s' % (badx, cap_ok))
 
     # ---- I. every paragraph, whole ---------------------------------------------------------
@@ -347,6 +352,16 @@ def main():
         buf.append(line.strip())
     if buf:
         paras.append(' '.join(buf))
+    # the header line under the title ("<name>, <e-mail>. Version of <date>.") is typeset as the title block
+    # with the e-mail as a first-page footnote and the date without "Version of" (owner, 20 Sep 2026, B50 Phase 3),
+    # so it is checked as three parts on page 1 and not as one paragraph
+    hm = re.match(r'^(.+?), (\S+@\S+)\. Version of (.+?)\.$', paras[0])
+    check(hm is not None, 'H  the header line has the form "<name>, <e-mail>. Version of <date>."', paras[0][:60])
+    page1 = squash(pagenumless[0])
+    hok = hm is not None and all(squash(x) in page1 for x in hm.groups())
+    check(hok, 'H2 the name, the e-mail (as the first-page footnote) and the plain date of the header line are on page 1 of the PDF',
+          'page 1 lacks: %s' % ([x for x in (hm.groups() if hm else ()) if squash(x) not in page1]))
+    paras = paras[1:]
     badi, split_p = [], 0
     for para in paras:
         p = re.sub(r'[*`]', '', para).replace('\\|', '|')
