@@ -4,6 +4,8 @@ One-way functions exist if and only if some efficiently samplable process produc
 
 **Status:** preprint, archived at Zenodo: DOI [10.5281/zenodo.22947444](https://doi.org/10.5281/zenodo.22947444) (dated 20 September 2026). Submitted to ECCC on 20 September 2026 and declined by board screening on 21 September 2026 (no mathematical objection was given). An arXiv version is in preparation.
 
+**Corrections (24 September 2026).** A revised, shorter version is in preparation. The current version (v2.3, the PDF here and on Zenodo) does not cite the literature on computational entropy. The mean of σ is, up to O(log n) and a change of time bound, the *KL-hardness for sampling* of Vadhan and Zheng (STOC 2012; ECCC TR11-141) — the *relative pseudoentropy* of Agrawal, Chen, Horel and Vadhan (CRYPTO 2019; arXiv 1902.11202); see also Haitner, Reingold, Vadhan and Wee (inaccessible entropy; arXiv 2010.05586) and Haitner and Vadhan (ECCC TR17-084). The reading of dissipation as hardness of reverse sampling is theirs, not this paper's. Theorem 1 is assembled from Lu–Oliveira–Zimand 2022 and HILNO 2023 (Lemmas 8–9); Theorem 4's mechanism is HILNO 2023, Appendix A (Theorem 55, Claim 57). What remains new is Proposition 10 and the bounded-exponential-moments sandwich.
+
 **Author:** Casey Thornton — caseythornton@utexas.edu
 
 ## What is here
