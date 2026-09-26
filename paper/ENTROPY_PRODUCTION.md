@@ -1,6 +1,24 @@
 # One-way functions are computational entropy production
 
-Casey Thornton, caseythornton@utexas.edu. Version of 20 September 2026.
+Casey Thornton, caseythornton@utexas.edu. Version of 20 September 2026, with a corrections page of 26 September 2026.
+
+---
+
+## Corrections and attributions (26 September 2026)
+
+This page is added to the version of 20 September 2026. Nothing else in the paper is changed, and no proof is withdrawn. A short note, *Unbounded exponential moments of time-bounded information asymmetry without one-way functions, relative to an oracle* (Zenodo, `10.5281/zenodo.22980359`, 26 September 2026), supersedes this paper for the results stated there.
+
+**What this paper contributes.** The definition of computational entropy production for a polynomial-time samplable process, with a bounded observer's shortest fast description in the role of the reverse process (Definitions 4 and 5); the name; the reading of the duality of Hirahara, Ilango, Lu, Nanashima and Oliveira as "one-way functions exist exactly when some samplable process dissipates" (Theorem 2, a restatement); the Zurek defect with its bounded-exponential-moments statement between NP ⊆ BPP and the non-existence of one-way functions (Theorem 3); and Question 1.
+
+**What this paper did not credit, and should have.**
+
+- The mean of σ is, up to O(log n) and a polynomial change of time bound, the KL-hardness for sampling of Vadhan and Zheng (STOC 2012), which Agrawal, Chen, Horel and Vadhan (CRYPTO 2019) call relative pseudoentropy; see also Haitner, Reingold, Vadhan and Wee (inaccessible entropy) and Haitner and Vadhan (2017). The reading of dissipation as the hardness of sampling the reverse is theirs.
+- That identification rests on the equivalence between pK^t and the time-bounded universal distribution with an auxiliary input, recorded by Hirahara and Nanashima (FOCS 2023, Appendix B), one half of which is the coding theorem of Lu, Oliveira and Zimand (ICALP 2022); their Lemma 6.9 and Proposition 6.10 give the domination step and its KL consequence.
+- Theorem 1 is assembled from the Kraft inequality for pK^t (Lu, Oliveira and Zimand 2022; Hirahara, Ilango, Lu, Nanashima and Oliveira 2023, Lemmas 8 and 9) by the argument that Ebtekar and Hutter (2024) give for the unbounded case. Its standing in the results table should read "assembled", not "new".
+- Theorem 4's mechanism is Appendix A of Hirahara, Ilango, Lu, Nanashima and Oliveira (2023): Theorem 55 and Claim 57.
+- Proposition 10 was proved on a set of oracles of measure at least 1/3 and assumed that two lemmas of Hirahara, Ilango, Lu, Nanashima and Oliveira relativize. The note above proves the statement with probability 1 and without that assumption (its Theorem 5.4 and Lemma 5.2).
+
+The physical reading of Sections 1 and 2.6 and Appendix A is the paper's own, and is offered as a reading, not as a physical claim. Physics is the frame, not the subject.
 
 ---
 

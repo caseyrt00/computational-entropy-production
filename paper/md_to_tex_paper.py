@@ -941,6 +941,7 @@ PROSE = {
 # holds them is notes/READ_STATUS.md in the paper repository, the one span the paper now carries.
 TT = {
     'notes/READ_STATUS.md',
+    '10.5281/zenodo.22980359',            # corrections page, 26 Sep 2026
 }
 
 # the 52 displayed formulas, keyed by their exact source text (lines stripped and joined)
